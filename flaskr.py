@@ -82,48 +82,46 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-def check_login(username, wachtwoord):
 
-  # maak van usernaam een int()
-  if username.isdigit():
-    leerlingnummer = int(username)
-  else:
-    return False, username+' is geen leerlingnummer'
-
-  user = query_db('select * from users where id = ?',
-                [username], one=True)
-  if user is None:
-    return False, 'Leerlingnummer %s onbekend' % leerlingnummer
-  else:
-    db_salt = user['salt']
-    db_hash = user['wachtwoord']
-    m = hashlib.md5()
-    m.update(db_salt+wachtwoord)
-    mijn_hash = m.hexdigest()
-
-    if (mijn_hash==db_hash):
-      return True, "Login gelukt!"
-
-  return False, "Login mislukt!"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   error = None
   if request.method == 'POST':
-
-
     # check login/pass in database
     login_username = request.form['username']
     login_password = request.form['password']
-    result, error = check_login(login_username, login_password)
 
-    if result:
-      # store in session cookie (crypto)
-      session['logged_in'] = True
-      session['username'] = request.form['username']
-      flash('Je bent ingelogd')
-      return redirect(url_for('show_entries'))
+    # maak van usernaam een int()
+    if not login_username.isdigit():
+      error = login_username+' is geen leerlingnummer'
+    else:
+      leerlingnummer = int(login_username)
 
+      # Haal userrecord uit databae
+
+      user = query_db('select * from users where id = ?',
+                    [leerlingnummer], one=True)
+
+      if user is None:
+        error = ('Leerlingnummer %s onbekend' % leerlingnummer)
+      else:
+        db_salt = user['salt']
+        db_hash = user['wachtwoord']
+        m = hashlib.md5()
+        m.update(db_salt+login_password)
+        mijn_hash = m.hexdigest()
+
+        if (mijn_hash==db_hash):
+          error = "Login gelukt!"
+
+          # store in session cookie (crypto)
+          session['logged_in'] = True
+          session['username'] = request.form['username']
+          flash('Je bent ingelogd')
+          return redirect(url_for('show_entries'))
+        else:
+          error = "Login mislukt!"
   return render_template('login.html', error=error)
 
 @app.route('/logout')
