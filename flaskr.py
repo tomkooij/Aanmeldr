@@ -19,13 +19,26 @@ import hashlib, os, binascii # crypto voor wachtwoorden
 # configuration
 DATABASE = 'flaskr.db'
 DEBUG = True
-SECRET_KEY = 'QQdw1maM2dJRkkYOFnn3DnnBFho='
+SECRET_KEY = 'This should be changed in a production enviroment'
 
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
+
+workshops = ( (0,"Geen keuze",750),
+              (1,"Film", 200),
+              (2,"Sporten in de Mammoet", 100),
+              (3,"Dansem", 20),
+              (4,"Kerstkaarten maken", 20),
+              (5,"Robots bouwen", 10),
+              (6,"Geen keuze",750),
+              (7,"Filmssssssss", 200),
+              (8,"Sporten ergens anders", 100),
+              (9,"Nog meer Dansen", 20),
+              (10,"Kerstkaarten maken", 20),
+              (15,"Robots bouwen", 10))
 
 def init_db():
     """Creates the database tables."""
@@ -62,18 +75,18 @@ def show_entries():
     db = get_db()
     cur = db.execute('select title, text from entries order by id desc')
     entries = cur.fetchall()
-    return render_template('show_entries.html', entries=entries)
+    return render_template('show_entries.html', workshops=workshops)
 
 
-@app.route('/add', methods=['POST'])
-def add_entry():
+@app.route('/kies_workshop', methods=['POST'])
+def kies_workshop():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, text) values (?, ?)',
-                 [request.form['title'], request.form['text']])
+    db.execute("UPDATE users set keuze = ? where id = ? ",
+                 [request.form['naam'], session['username']])
     db.commit()
-    flash('New entry was successfully posted')
+    flash('New keuze was successfully posted')
     return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
@@ -117,8 +130,10 @@ def login():
 
           # store in session cookie (crypto)
           session['logged_in'] = True
-          session['username'] = request.form['username']
-          flash('Je bent ingelogd')
+          session['username'] = leerlingnummer
+          session['naam'] = user['naam']
+          session['keuze'] = user['keuze']
+          flash('Welkom %s. Je bent ingelogd' % user['naam'])
           return redirect(url_for('show_entries'))
         else:
           error = "Login mislukt!"
