@@ -1,21 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.logged_in %}
-    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
-      <dl>
-        <dt>Title:
-        <dd><input type=text size=30 name=title>
-        <dt>Text:
-        <dd><textarea name=text rows=5 cols=40></textarea>
-        <dd><input type=submit value=Share>
-      </dl>
+
+    Je huidige keuze is: {{ session.keuze, workshops[session.keuze] }}
+    <form action="{{ url_for('kies_workshop') }}" method=post class=kies-workshop>
+    <dl>
+      <dt>Kies je workshop:
+      {% for workshop in workshops %}
+      <dd><input type="radio" name="keuze" value="1"/> {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
+      {% endfor %}
+    <dd>
+    <dd><input type=submit value="Kies!">
+    </dl>
     </form>
   {% endif %}
-  <ul class=entries>
-  {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
-  {% endfor %}
-  </ul>
+
 {% endblock %}
