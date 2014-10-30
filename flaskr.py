@@ -87,6 +87,11 @@ def kies_workshop():
     else:
       keuze = 0
 
+    # als op de een of andere manier de worshop ID groter is dan het aantal
+    if (keuze > (len(workshops)-1)):
+      flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.')
+      keuze = 0
+
     # zijn er nog plaatsen? Het kan best zijn dat de workshop inmiddels vol is
     # kies_workshop POST kan 2 dagen na de laaste GET van show_entries zijn
     if (workshops[keuze][2] < 1):
