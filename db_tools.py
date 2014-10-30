@@ -1,4 +1,5 @@
-# Read from sqlite datables
+# several function used for development of aanmeldr
+#   will be replaced by a toolchain for setting up the database
 
 import sqlite3
 import sys
