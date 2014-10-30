@@ -21,9 +21,23 @@ def print_db():
       for row in rows:
           print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
 
+def print_workshops():
+  db = sqlite3.connect('flaskr.db')
+
+  with db:
+      db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+
+      cur = db.cursor()
+      cur.execute("SELECT * FROM workshops")
+
+      rows = cur.fetchall()
+
+      for row in rows:
+          print row
 
 
-def write_workshops):
+
+def write_workshops():
   workshops = ( (0,"Geen keuze",750),
               (1,"Film", 200),
               (2,"Sporten in de Mammoet", 100),
@@ -37,21 +51,26 @@ def write_workshops):
               (10,"Kerstkaarten maken", 20),
               (15,"DIT IS EEN ILLEGALE WORKSHOP ID = 15", 10))
 
+
+  db = sqlite3.connect('flaskr.db')
+
+  with db:
+
+      cur = db.cursor()
+  #      cur.execute("INSERT INTO users VALUES (3145,'Pi','wachtwoord',1);")
+  #      cur.execute("INSERT INTO users VALUES (2789,'EEeee','wachtwoord',3);")
+  #      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
+  #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
+
+      cur.execute("DROP TABLE IF EXISTS workshops")
+      cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT )")
+      cur.executemany("INSERT INTO workshops VALUES(?, ?, ?)", workshops)
+      db.commit()
+
+
+
+
 def write_db_test():
-db = sqlite3.connect('flaskr.db')
-
-with db:
-
-    cur = db.cursor()
-#      cur.execute("INSERT INTO users VALUES (3145,'Pi','wachtwoord',1);")
-#      cur.execute("INSERT INTO users VALUES (2789,'EEeee','wachtwoord',3);")
-#      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
-#      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
-
-    cur.execute("DROP TABLE IF EXISTS workshops")
-    cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT )")
-    cur.executemany("INSERT INTO workshops VALUES(?, ?, ?)", workshops)
-    db.commit()
 
   testtabel = (
     (1234,'Tom Kooij', 'b884c7577e7e04c0b9a8e242964db5dd', 'a8e6833a4588467a0702', 15), # wachtwoord = "geheim"
