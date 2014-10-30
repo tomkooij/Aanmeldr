@@ -87,19 +87,24 @@ def kies_workshop():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
+# let op request.form['kueze'] = UNICODE check in html en vang af
 
-"""
-HET GAAT HIER MIS OMDAT request.form['keuze'] EEN unicode ding is in plaats
-van een int()
-"""
-    
+    # maak een int van de keuze die in unicode binnenkomt
+    # vang onbekende keuzes af
+    tmp_keuze = request.form['keuze']
+    if str(tmp_keuze).isdigit:
+      keuze = int(tmp_keuze)
+    else:
+      keuze = 0
 
     db.execute("UPDATE users set keuze = ? where id = ? ",
-                 [int(request.form['keuze']), session['username']])
+                 [keuze, session['username']])
     db.commit()
-    session.keuze = int(request.form['keuze'])  # update cookie
-    message = 'Je hebt nu gekozen voor: '+str(workshops[session['keuze']][1])
+    session.keuze = keuze  # update cookie
+    message = 'Je hebt nu gekozen voor: '+str(workshops[keuze][1])
     flash(message)
+
+
 #    return render_template('show_entries.html', workshops=workshops)
     return redirect(url_for('show_entries'))
 

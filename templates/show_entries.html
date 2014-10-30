@@ -7,7 +7,7 @@
     <dl>
       <dt>Kies je workshop:
       {% for workshop in workshops %}
-      <dd><input type="radio" name="keuze" value={{ workshop[0] }}/> {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
+      <dd><input type="radio" value={{ workshop[0] }} name="keuze"  /> {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
       {% endfor %}
     <dd>
     <dd><input type=submit value="Kies!">
