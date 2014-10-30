@@ -39,7 +39,7 @@ workshops = ( (0,"Geen keuze",750),
               (8,"Sporten ergens anders", 100),
               (9,"Nog meer Dansen", 20),
               (10,"Kerstkaarten maken", 20),
-              (15,"Robots bouwen", 10))
+              (15,"DIT IS EEN ILLEGALE WORKSHOP ID = 15", 10))
 
 
 def init_db():
@@ -78,7 +78,7 @@ def show_entries():
 #    cur = db.execute('select title, text from entries order by id desc')
 #    entries = cur.fetchall()
     if not session.get('logged_in'):
-      return redirect(url_for('login'))      
+      return redirect(url_for('login'))
     return render_template('show_entries.html', workshops=workshops)
 
 
@@ -101,7 +101,7 @@ def kies_workshop():
     db.execute("UPDATE users set keuze = ? where id = ? ",
                  [keuze, session['username']])
     db.commit()
-    session.keuze = keuze  # update cookie
+    session['keuze'] = keuze  # update cookie
     message = 'Je hebt nu gekozen voor: '+str(workshops[keuze][1])
     flash(message)
 
