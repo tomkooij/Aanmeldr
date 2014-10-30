@@ -3,6 +3,7 @@
 import sqlite3
 import sys
 import hashlib, os, binascii # crypto voor wachtwoorden
+import random
 
 def print_db():
   db = sqlite3.connect('flaskr.db')
@@ -150,3 +151,15 @@ def check_login(username, wachtwoord):
         return True
 
   return False
+
+#
+# random.choice() is size(2^50=1e15)
+#    size of the password is ((24+8)^length)
+#    (32^10 = (2^5)^10 = 2^50)
+#    length=10 is the best password length
+#
+def generate_password(length):
+    salt_set = ('abcdefghijkmnpqrstuvwxyz'
+                '23456789')
+    salt = length * ' '
+    return ''.join([random.choice(salt_set) for c in salt])

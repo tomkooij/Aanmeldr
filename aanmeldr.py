@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
     Aanmeldr
-    ~~~~~~
+    ~~~~~~~~
 
-    Coornhert kerstworkshop aanmeldwebsite (Based on Flaskr)
-
+    Coornhert kerstworkshop aanmeldwebsite
+    (Based on Flaskr, a Flask example. See README for license)
 
 """
 
@@ -24,16 +24,6 @@ SECRET_KEY = 'This should be changed in a production enviroment'
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
-
-
-def init_db():
-    """Creates the database tables."""
-    with app.app_context():
-        db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
-
 
 def get_db():
     """Opens a new database connection if there is none yet for the
