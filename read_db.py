@@ -38,18 +38,18 @@ def print_workshops():
 
 
 def write_workshops():
-  workshops = ( (0,"Geen keuze",750),
+  workshops = ( (0,"Geen keuze",100000),
               (1,"Film", 200),
               (2,"Sporten in de Mammoet", 100),
-              (3,"Dansem", 0),
-              (4,"Kerstkaarten maken", 20),
-              (5,"Robots bouwen", 10),
-              (6,"Geen keuze",750),
+              (3,"Dansem", 1),
+              (4,"Kerstkaarten maken", 2),
+              (5,"Robots bouwen", 1),
+              (6,"l33t h4x0rs", 750),
               (7,"Filmssssssss", 0),
               (8,"Sporten ergens anders", 10),
               (9,"Nog meer Dansen", 0),
               (10,"Kerstkaarten maken", 20),
-              (15,"DIT IS EEN ILLEGALE WORKSHOP ID = 15", 10))
+              (15,"DIT IS EEN ILLEGALE WORKSHOP. ID = 15", 10))
 
 
   db = sqlite3.connect('flaskr.db')

@@ -26,21 +26,6 @@ app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 
-
-workshops = ( (0,"Geen keuze",750),
-              (1,"Film", 200),
-              (2,"Sporten in de Mammoet", 100),
-              (3,"Dansem", 0),
-              (4,"Kerstkaarten maken", 20),
-              (5,"Robots bouwen", 10),
-              (6,"Geen keuze",750),
-              (7,"Filmssssssss", 0),
-              (8,"Sporten ergens anders", 10),
-              (9,"Nog meer Dansen", 0),
-              (10,"Kerstkaarten maken", 20),
-              (15,"DIT IS EEN ILLEGALE WORKSHOP ID = 15", 10))
-
-
 def init_db():
     """Creates the database tables."""
     with app.app_context():
@@ -71,23 +56,28 @@ def close_db_connection(exception):
         top.sqlite_db.close()
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def show_entries():
-#    db = get_db()
-#    cur = db.execute('select title, text from entries order by id desc')
-#    entries = cur.fetchall()
     if not session.get('logged_in'):
-      return redirect(url_for('login'))
-    return render_template('show_entries.html', workshops=workshops)
+        return redirect(url_for('login'))
 
+    if request.method == 'GET':
 
+      db = get_db()
+      cur = db.execute('select * from workshops')
+      workshops = cur.fetchall()
+      if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+      return render_template('show_entries.html', workshops=workshops)
 
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-# let op request.form['kueze'] = UNICODE check in html en vang af
+    cur = db.execute('select * from workshops')
+    workshops = cur.fetchall()
 
     # maak een int van de keuze die in unicode binnenkomt
     # vang onbekende keuzes af
@@ -97,16 +87,50 @@ def kies_workshop():
     else:
       keuze = 0
 
-    db.execute("UPDATE users set keuze = ? where id = ? ",
-                 [keuze, session['username']])
-    db.commit()
-    session['keuze'] = keuze  # update cookie
-    message = 'Je hebt nu gekozen voor: '+str(workshops[keuze][1])
-    flash(message)
+    # zijn er nog plaatsen? Het kan best zijn dat de workshop inmiddels vol is
+    # kies_workshop POST kan 2 dagen na de laaste GET van show_entries zijn
+    if (workshops[keuze][2] < 1):
+      flash('Sorry! Workshop is niet meer beschikbaar')
+      return redirect(url_for('show_entries'))
+    elif (keuze == session['keuze']):
+      # keuze hetzelfde is als huidige kueze
+      flash('Je bent al ingeschreven voor deze workshop!')
+      return redirect(url_for('show_entries'))
+    else:
+#      flash('DEBUG: Attempting to write the workshop database')
+
+      # schrijf eerst de workshop database
+      # uitschrijven huidige keuze (staat in cookie)
+      cur = db.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = ? ", [session['keuze']])
+      # inschrijven nieuwe keuze
+      # Dit is heel eng want plaatsen kan kleiner worden dan 0 helaas heeft sqllite geen GREATEST en MAX werkt niet
+      # GETEST : werkt nog wel met "plaatsen = -10"
+      # misschien moet plaatsen een unsigned int worden en dan afvangen van de error?
+      cur = db.execute("UPDATE workshops set plaatsen = plaatsen - 1 where id = ?", [keuze])
+      db.commit()
+
+      #
+      # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
+      #
+
+      # Schrijf nu de keuze in de user database
+      #
+#      flash('DEBUG: Attempting to write the user database')
+      db.execute("UPDATE users set keuze = ? where id = ? ",
+                   [keuze, session['username']])
+      db.commit()
+      #
+      # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
+      #
 
 
-#    return render_template('show_entries.html', workshops=workshops)
-    return redirect(url_for('show_entries'))
+      session['keuze'] = keuze  # update cookie
+      message = 'Je hebt nu gekozen voor: '+str(workshops[keuze][1])
+      flash(message)
+
+
+  #    return render_template('show_entries.html', workshops=workshops)
+      return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
@@ -153,6 +177,8 @@ def login():
           session['naam'] = user['naam']
           session['keuze'] = user['keuze']
           flash('Welkom %s. Je bent ingelogd.' % user['naam'])
+          if session['keuze'] > 0:
+            flash('Je hebt al eerder een workshop gekozen:')
           return redirect(url_for('show_entries'))
         else:
           error = "Login mislukt!"

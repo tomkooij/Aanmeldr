@@ -2,8 +2,7 @@
 {% block body %}
   {% if session.logged_in %}
 
-    DEBUG: huidige keuze is: {{ session.keuze, workshops[session.keuze] }}
-    <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post class=kies-workshop>
+    <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post>
     <dl>
       <dt>Kies je workshop:
       {% for workshop in workshops %}
@@ -13,11 +12,16 @@
         {% endif %}
 
         {% if workshop[2] < 1 %}
-          disabled /> <b> VOL! </b>
+          disabled /> <i> (VOL) </i>
         {% else %}
           />
         {% endif %}
-         {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
+
+        {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen)
+        {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
+           <b> (huidige keuze) </b>
+        {% endif %}
+        </br>
       {% endfor %}
     <dd>
     <dd><input type=submit value="Kies!">
