@@ -2,7 +2,7 @@
 {% block body %}
   {% if session.logged_in %}
 
-    Je huidige keuze is: {{ session.keuze, workshops[session.keuze] }}
+    DEBUG: huidige keuze is: {{ session.keuze, workshops[session.keuze] }}
     <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post class=kies-workshop>
     <dl>
       <dt>Kies je workshop:

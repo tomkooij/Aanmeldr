@@ -152,7 +152,7 @@ def login():
           session['username'] = leerlingnummer
           session['naam'] = user['naam']
           session['keuze'] = user['keuze']
-          flash('Welkom %s. Je bent ingelogd' % user['naam'])
+          flash('Welkom %s. Je bent ingelogd.' % user['naam'])
           return redirect(url_for('show_entries'))
         else:
           error = "Login mislukt!"
@@ -163,8 +163,8 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('Je bent uitgelogd!')
-    return redirect(url_for('show_entries'))
-
+#    return redirect(url_for('show_entries'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run()
