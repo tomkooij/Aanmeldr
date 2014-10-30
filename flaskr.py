@@ -77,7 +77,8 @@ def show_entries():
 #    db = get_db()
 #    cur = db.execute('select title, text from entries order by id desc')
 #    entries = cur.fetchall()
-
+    if not session.get('logged_in'):
+      return redirect(url_for('login'))      
     return render_template('show_entries.html', workshops=workshops)
 
 
