@@ -12,8 +12,7 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, _app_ctx_stack
 
-# mijn eigen check_login
-from read_db import check_login
+
 import hashlib, os, binascii # crypto voor wachtwoorden
 
 # configuration
@@ -31,13 +30,13 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 workshops = ( (0,"Geen keuze",750),
               (1,"Film", 200),
               (2,"Sporten in de Mammoet", 100),
-              (3,"Dansem", 20),
+              (3,"Dansem", 0),
               (4,"Kerstkaarten maken", 20),
               (5,"Robots bouwen", 10),
               (6,"Geen keuze",750),
-              (7,"Filmssssssss", 200),
-              (8,"Sporten ergens anders", 100),
-              (9,"Nog meer Dansen", 20),
+              (7,"Filmssssssss", 0),
+              (8,"Sporten ergens anders", 10),
+              (9,"Nog meer Dansen", 0),
               (10,"Kerstkaarten maken", 20),
               (15,"DIT IS EEN ILLEGALE WORKSHOP ID = 15", 10))
 
