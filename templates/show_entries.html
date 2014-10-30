@@ -3,11 +3,11 @@
   {% if session.logged_in %}
 
     Je huidige keuze is: {{ session.keuze, workshops[session.keuze] }}
-    <form action="{{ url_for('kies_workshop') }}" method=post class=kies-workshop>
+    <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post class=kies-workshop>
     <dl>
       <dt>Kies je workshop:
       {% for workshop in workshops %}
-      <dd><input type="radio" name="keuze" value="1"/> {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
+      <dd><input type="radio" name="keuze" value={{ workshop[0] }}/> {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen) <br />
       {% endfor %}
     <dd>
     <dd><input type=submit value="Kies!">

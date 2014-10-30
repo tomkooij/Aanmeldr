@@ -74,11 +74,12 @@ def close_db_connection(exception):
 
 @app.route('/')
 def show_entries():
-    db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
-    entries = cur.fetchall()
+#    db = get_db()
+#    cur = db.execute('select title, text from entries order by id desc')
+#    entries = cur.fetchall()
 
     return render_template('show_entries.html', workshops=workshops)
+
 
 
 @app.route('/kies_workshop', methods=['POST'])
@@ -86,11 +87,20 @@ def kies_workshop():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute("UPDATE users set keuze = ? where id = ? ",
-                 [request.form['naam'], session['username']])
-    db.commit()
-    flash('New keuze was successfully posted')
 
+"""
+HET GAAT HIER MIS OMDAT request.form['keuze'] EEN unicode ding is in plaats
+van een int()
+"""
+    
+
+    db.execute("UPDATE users set keuze = ? where id = ? ",
+                 [int(request.form['keuze']), session['username']])
+    db.commit()
+    session.keuze = int(request.form['keuze'])  # update cookie
+    message = 'Je hebt nu gekozen voor: '+str(workshops[session['keuze']][1])
+    flash(message)
+#    return render_template('show_entries.html', workshops=workshops)
     return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
