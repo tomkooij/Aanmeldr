@@ -120,11 +120,8 @@ def kies_workshop():
 
 
       session['keuze'] = keuze  # update cookie
-      message = 'Je hebt nu gekozen voor: '+str(workshops[keuze][1])
-      flash(message)
+      flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]))
 
-
-  #    return render_template('show_entries.html', workshops=workshops)
       return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
@@ -184,7 +181,6 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('Je bent uitgelogd!')
-#    return redirect(url_for('show_entries'))
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
