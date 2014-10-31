@@ -1,13 +1,23 @@
 # several function used for development of aanmeldr
 #   will be replaced by a toolchain for setting up the database
+#
+#
+# usage: set up (test) database:
+#  from db_tools import *
+#  write_testdb()
+#  write_workshops()
+#  print_db()
+
 
 import sqlite3
 import sys
 import hashlib, os, binascii # crypto voor wachtwoorden
 import random
 
+DATABASE = 'flaskr.db'
+
 def print_db():
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
       db.row_factory = sqlite3.Row   # this enables the dictionary cursor
@@ -24,7 +34,7 @@ def print_db():
           print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
 
 def print_workshops():
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
       db.row_factory = sqlite3.Row   # this enables the dictionary cursor
@@ -54,7 +64,7 @@ def write_workshops():
               (15,"DIT IS EEN ILLEGALE WORKSHOP. ID = 15", 10))
 
 
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
 
@@ -72,7 +82,7 @@ def write_workshops():
 
 
 
-def write_db_test():
+def write_testdb():
 
   testtabel = (
     (1234,'Tom Kooij', 'b884c7577e7e04c0b9a8e242964db5dd', 'a8e6833a4588467a0702', 15), # wachtwoord = "geheim"
@@ -82,7 +92,7 @@ def write_db_test():
     (1,'Test Leerling','geheim', 'kruiden',1)
     )
 
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
 
@@ -99,7 +109,7 @@ def write_db_test():
 
 def sel():
 
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
       cur = db.cursor()
@@ -112,13 +122,26 @@ def sel():
 
 
 def change_ww(leerlingnummer, wachtwoord):
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
-      cur = db.cursor()
+    db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+    cur = db.cursor()
 
-      cur.execute("UPDATE users SET wachtwoord=? WHERE id=?", (wachtwoord,leerlingnummer))
-      db.commit()
+    cur.execute("SELECT * FROM users WHERE Id=:Id", {"Id": leerlingnummer})
+    db.commit()
+
+    row = cur.fetchone()
+    db_salt = row["salt"]
+
+    m = hashlib.sha1()
+    m.update(db_salt+wachtwoord)
+    mijn_hash = m.hexdigest()
+
+    cur = db.cursor()
+
+    cur.execute("UPDATE users SET wachtwoord=? WHERE id=?", (mijn_hash,leerlingnummer))
+    db.commit()
 
 
 
@@ -126,7 +149,7 @@ def check_login(username, wachtwoord):
 
   leerlingnummer = int(username)
 
-  db = sqlite3.connect('flaskr.db')
+  db = sqlite3.connect(DATABASE)
 
   with db:
 
@@ -140,7 +163,7 @@ def check_login(username, wachtwoord):
       db_wachtwoord = row["wachtwoord"]
       db_salt = row["salt"]
 
-      m = hashlib.md5()
+      m = hashlib.sha1()
       m.update(db_salt+wachtwoord)
       mijn_hash = m.hexdigest()
 
@@ -160,7 +183,7 @@ def check_login(username, wachtwoord):
 #    length=10 is the best password length
 #
 def generate_password(length):
-    salt_set = ('abcdefghijkmnpqrstuvwxyz'
+    pw_set = ('abcdefghijkmnpqrstuvwxyz'
                 '23456789')
-    salt = length * ' '
-    return ''.join([random.choice(salt_set) for c in salt])
+    pw = length * ' '
+    return ''.join([random.choice(pw_set) for c in pw])

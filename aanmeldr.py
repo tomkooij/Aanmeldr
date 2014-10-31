@@ -156,7 +156,7 @@ def login():
       else:
         db_salt = user['salt']
         db_hash = user['wachtwoord']
-        m = hashlib.md5()
+        m = hashlib.sha1()
         m.update(db_salt+login_password)
         mijn_hash = m.hexdigest()
 
