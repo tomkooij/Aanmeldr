@@ -6,7 +6,7 @@
     <dl>
       <dt>Kies je workshop:
       {% for workshop in workshops %}
-      <dd><input type="radio" value={{ workshop[0] }} name="keuze"
+      <dd><input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
         {% if workshop[0]==session.keuze %}
           checked
         {% endif %}
@@ -24,7 +24,7 @@
         </br>
       {% endfor %}
     <dd>
-    <dd><input type=submit value="Kies!">
+    <dd><input type=submit value="Kies!" class=button>
     </dl>
     </form>
   {% endif %}
