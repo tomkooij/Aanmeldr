@@ -24,7 +24,11 @@
         </br>
       {% endfor %}
     <dd>
-    <dd><input type=submit value="Kies!" class=button>
+    {% if (session.keuze > 0) %}
+      <dd><input type=submit value="Verander mijn keuze!" class=button>
+    {% else %}
+      <dd><input type=submit value="Kies!" class=button>
+    {% endif %}
     </dl>
     </form>
   {% endif %}
