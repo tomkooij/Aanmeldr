@@ -79,17 +79,17 @@ def kies_workshop():
 
     # als op de een of andere manier de worshop ID groter is dan het aantal
     if (keuze > (len(workshops)-1)):
-      flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.')
+      flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.','error')
       keuze = 0
 
     # zijn er nog plaatsen? Het kan best zijn dat de workshop inmiddels vol is
     # kies_workshop POST kan 2 dagen na de laaste GET van show_entries zijn
     if (workshops[keuze][2] < 1):
-      flash('Sorry! Workshop is niet meer beschikbaar')
+      flash('Sorry! Workshop is niet meer beschikbaar','error')
       return redirect(url_for('show_entries'))
     elif (keuze == session['keuze']):
       # keuze hetzelfde is als huidige kueze
-      flash('Je bent al ingeschreven voor deze workshop!')
+      flash('Je bent al ingeschreven voor deze workshop!','error')
       return redirect(url_for('show_entries'))
     else:
 #      flash('DEBUG: Attempting to write the workshop database')
@@ -120,7 +120,7 @@ def kies_workshop():
 
 
       session['keuze'] = keuze  # update cookie
-      flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]))
+      flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
 
       return redirect(url_for('show_entries'))
 
@@ -168,7 +168,7 @@ def login():
           session['username'] = leerlingnummer
           session['naam'] = user['naam']
           session['keuze'] = user['keuze']
-          flash('Welkom %s. Je bent ingelogd.' % user['naam'])
+          flash('Welkom %s. Je bent ingelogd.' % user['naam'],'flash')
           if session['keuze'] > 0:
             flash('Je hebt al eerder een workshop gekozen:')
           return redirect(url_for('show_entries'))
@@ -180,7 +180,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('Je bent uitgelogd!')
+    flash('Je bent uitgelogd!','flash')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

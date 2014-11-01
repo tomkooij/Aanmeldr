@@ -10,9 +10,15 @@
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
   </div>
-  {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
-  {% endfor %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <p class=flashes>
+      {% for category, message in messages %}
+        <p class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+      </p>
+    {% endif %}
+  {% endwith %}
   {% block body %}{% endblock %}
   <p>
   <p>
