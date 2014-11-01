@@ -16,7 +16,7 @@
           checked
         {% endif %}
 
-        {% if workshop[2] < 1 %}
+        {% if (workshop[2] < 1) %}
           disabled /> <i> (VOL) </i>
         {% else %}
           />
@@ -30,9 +30,9 @@
       {% endfor %}
     <dd>
     {% if (session.keuze > 0) %}
-      <dd><input type=submit value="Verander mijn inschrijving!" class=button>
+      <dd><input type=submit value="Verander mijn inschrijving!" class="button blue">
     {% else %}
-      <dd><input type=submit value="Schrijf me in!" class=button>
+      <dd><input type=submit value="Schrijf me in!" class="button green">
     {% endif %}
     </dl>
     </form>
