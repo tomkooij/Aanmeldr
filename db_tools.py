@@ -85,8 +85,8 @@ def write_workshops():
 def write_testdb():
 
   testtabel = (
-    (1234,'Tom Kooij', 'b884c7577e7e04c0b9a8e242964db5dd', 'a8e6833a4588467a0702', 15), # wachtwoord = "geheim"
-    (3141,'Pi','wachtwoord', 'salt', 1),
+    (1234,'Tom Kooij', '234655232ffd54cb74f6d75aa65132f79c0f404f', 'a8e6833a4588467a0702', 15), # wachtwoord = "geheim"
+    (3141,'Pi','b107f52a6e547eb63666ef74ac39525db2917116', 'salt', 1),
     (2789,'EEeee','wachtwoord', 'zout', 3),
     (007,'James Bond','test', 'peper', 7),
     (1,'Test Leerling','geheim', 'kruiden',1)
