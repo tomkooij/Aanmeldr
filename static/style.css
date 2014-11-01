@@ -1,6 +1,6 @@
-body            { color: #333333; font-family: Verdana, Geneva, sans-serif; background: #eee; }
+body            { font-family: Verdana, Geneva, sans-serif; background: #eee; }
 a, h1, h2       { color: #377BA8; }
-h1, h2          { font-family: 'Arial', serif; margin: 0; }
+h1, h2          { margin: 0; }
 h1              { border-bottom: 2px solid #eee; }
 h2              { font-size: 1.2em; }
 
@@ -16,6 +16,7 @@ h2              { font-size: 1.2em; }
 .flash          { background: #CEE5F5; padding: 0.5em;
                   border: 1px solid #AACBE2; }
 .error          { background: #F0D6D6; padding: 0.5em; }
+
 .checkbox  {
     display:inline-block;
     width:19px;
@@ -25,7 +26,6 @@ h2              { font-size: 1.2em; }
 }
 
 .button.blue {
-  font-family: Arial;
   color: #ffffff;
   font-size: 20px;
   background: #4285f4;
@@ -34,7 +34,6 @@ h2              { font-size: 1.2em; }
 }
 
 .button.green {
-  font-family: Arial;
   color: #ffffff;
   font-size: 20px;
   background: #0f9d58;
