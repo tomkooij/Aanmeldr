@@ -4,7 +4,12 @@
 
     <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post>
     <dl>
-      <dt>Kies je workshop:
+      {% if (session.keuze > 0) %}
+        Je bent ingeschreven. Je kunt je keuze wijzigen:
+      {% else %}
+        Je bent nog niet ingeschreven. Kies je workshop:
+      {% endif %}
+
       {% for workshop in workshops %}
       <dd><input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
         {% if workshop[0]==session.keuze %}
@@ -25,9 +30,9 @@
       {% endfor %}
     <dd>
     {% if (session.keuze > 0) %}
-      <dd><input type=submit value="Verander mijn keuze!" class=button>
+      <dd><input type=submit value="Verander mijn inschrijving!" class=button>
     {% else %}
-      <dd><input type=submit value="Kies!" class=button>
+      <dd><input type=submit value="Schrijf me in!" class=button>
     {% endif %}
     </dl>
     </form>

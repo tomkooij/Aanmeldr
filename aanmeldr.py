@@ -170,7 +170,7 @@ def login():
           session['keuze'] = user['keuze']
           flash('Welkom %s. Je bent ingelogd.' % user['naam'],'flash')
           if session['keuze'] > 0:
-            flash('Je hebt al eerder een workshop gekozen:')
+            flash('Je hebt al een workshop gekozen!','error')
           return redirect(url_for('show_entries'))
         else:
           error = "Login mislukt!"
