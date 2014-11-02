@@ -89,7 +89,10 @@ def kies_workshop():
       return redirect(url_for('show_entries'))
     elif (keuze == session['keuze']):
       # keuze hetzelfde is als huidige kueze
-      flash('Je bent al ingeschreven voor deze workshop!','error')
+      if (keuze == 0):
+        flash('Niet ingeschreven. Maak een keuze: ','flash')
+      else:
+        flash('Je bent al ingeschreven voor deze workshop!','error')
       return redirect(url_for('show_entries'))
     else:
 #      flash('DEBUG: Attempting to write the workshop database')
@@ -120,7 +123,10 @@ def kies_workshop():
 
 
       session['keuze'] = keuze  # update cookie
-      flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
+      if (keuze == 0):
+        flash('Je bent nog niet (of niet meer) ingeschreven!','error')
+      else:
+        flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
 
       return redirect(url_for('show_entries'))
 

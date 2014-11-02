@@ -5,13 +5,16 @@
     <form id="keuze" action="{{ url_for('kies_workshop') }}" method=post>
     <dl>
       {% if (session.keuze > 0) %}
-        Je bent ingeschreven. Je kunt je keuze wijzigen:
+        Je bent ingeschreven. Je kunt je keuze wijzigen:<p>
       {% else %}
-        Je bent nog niet ingeschreven. Kies je workshop:
+        Je bent nog niet ingeschreven. Kies je workshop:<p>
       {% endif %}
 
       {% for workshop in workshops %}
-      <dd><input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
+        <!-- CCS3 material design radio buttons alles tussen "label" -->
+        <label class="radio">
+
+        <input type="radio" value={{ workshop[0] }} class="radio" name="keuze"
         {% if workshop[0]==session.keuze %}
           checked
         {% endif %}
@@ -22,17 +25,21 @@
           />
         {% endif %}
 
+        <span class="outer"><span class="inner"></span></span>
+
         {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen)
         {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
            <b> (huidige keuze) </b>
         {% endif %}
-        </br>
+
+        </label> <!-- einde radio buttons -->
+
       {% endfor %}
-    <dd>
+    
     {% if (session.keuze > 0) %}
-      <dd><input type=submit value="Verander mijn inschrijving!" class="button blue">
+      <input type=submit value="Verander mijn inschrijving!" class="button blue">
     {% else %}
-      <dd><input type=submit value="Schrijf me in!" class="button green">
+      <input type=submit value="Schrijf me in!" class="button green">
     {% endif %}
     </dl>
     </form>
