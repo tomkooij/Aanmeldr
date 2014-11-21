@@ -12,18 +12,21 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, _app_ctx_stack
 
+from flask_sslify import SSLify
+
 
 import hashlib, os, binascii # crypto voor wachtwoorden
 
 # configuration
 DATABASE = 'flaskr.db'
-DEBUG = True
+DEBUG = True # SSLify requires DEBUG = False
 SECRET_KEY = 'This should be changed in a production enviroment'
 
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+sslify = SSLify(app)
 
 def get_db():
     """Opens a new database connection if there is none yet for the
