@@ -12,9 +12,9 @@
 
       {% for workshop in workshops %}
         <!-- CCS3 material design radio buttons alles tussen "label" -->
-        <label class="radio">
 
-        <input type="radio" value={{ workshop[0] }} class="radio" name="keuze"
+
+        <input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
         {% if workshop[0]==session.keuze %}
           checked
         {% endif %}
@@ -25,14 +25,13 @@
           />
         {% endif %}
 
-        <span class="outer"><span class="inner"></span></span>
 
         {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen)
         {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
            <b> (huidige keuze) </b>
         {% endif %}
 
-      </label><br> <!-- einde radio buttons -->
+      <br> <!-- einde radio buttons -->
 
       {% endfor %}
 
