@@ -13,6 +13,7 @@ import sqlite3
 import sys
 import hashlib, os, binascii # crypto voor wachtwoorden
 import random
+import csv
 
 DATABASE = 'flaskr.db'
 
@@ -50,34 +51,30 @@ def print_workshops():
 
 
 def write_workshops():
-  workshops = ( (0,"Geen keuze",100000),
-              (1,"Film", 200),
-              (2,"Sporten in de Mammoet", 100),
-              (3,"Dansem", 1),
-              (4,"Kerstkaarten maken", 2),
-              (5,"Robots bouwen", 1),
-              (6,"l33t h4x0rs", 750),
-              (7,"Filmssssssss", 0),
-              (8,"Sporten ergens anders", 10),
-              (9,"Nog meer Dansen", 0),
-              (10,"Kerstkaarten maken", 20),
-              (15,"DIT IS EEN ILLEGALE WORKSHOP. ID = 15", 10))
+    workshops = ( (0,"Geen keuze",100000),
+          (1,"Film", 5),
+          (2,"Sport", 5),
+          (3,"Dansen", 15),
+          (4,"Kerstkaarten maken", 5),
+          (5,"Robots bouwen", 5),
+          (6,"l33t h4x0rs", 1) )
 
 
-  db = sqlite3.connect(DATABASE)
 
-  with db:
+    db = sqlite3.connect(DATABASE)
 
-      cur = db.cursor()
-  #      cur.execute("INSERT INTO users VALUES (3145,'Pi','wachtwoord',1);")
-  #      cur.execute("INSERT INTO users VALUES (2789,'EEeee','wachtwoord',3);")
-  #      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
-  #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
+    with db:
 
-      cur.execute("DROP TABLE IF EXISTS workshops")
-      cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT )")
-      cur.executemany("INSERT INTO workshops VALUES(?, ?, ?)", workshops)
-      db.commit()
+        cur = db.cursor()
+        #      cur.execute("INSERT INTO users VALUES (3145,'Pi','wachtwoord',1);")
+        #      cur.execute("INSERT INTO users VALUES (2789,'EEeee','wachtwoord',3);")
+        #      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
+        #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
+
+        cur.execute("DROP TABLE IF EXISTS workshops")
+        cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT )")
+        cur.executemany("INSERT INTO workshops VALUES(?, ?, ?)", workshops)
+        db.commit()
 
 
 
@@ -106,6 +103,49 @@ def write_testdb():
       cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, keuze INT )")
       cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?)", testtabel)
       db.commit()
+
+def read_users_and_write_passwords():
+
+    with open('users.csv', 'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter=';', quoting=csv.QUOTE_NONE)
+        with open('output.csv', 'wb') as f:
+            writer = csv.writer(f)
+
+            for row in reader:
+                leerlingnummer = row[0]
+                password = generate_password(10)
+                salt = generate_password(64)
+                naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
+                print [leerlingnummer, naam, password, salt, 0]
+                writer.writerow([leerlingnummer, naam, password, salt, 0])
+
+
+def create_userdb():
+
+    usertable = []
+
+    with open('output.csv', 'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+
+        for row in reader:
+            db_salt = row[3]
+            wachtwoord = row[2]     # the real password
+            m = hashlib.sha1()
+            m.update(db_salt+wachtwoord)
+            row[2] = m.hexdigest()  # the salted hash
+            print row
+            usertable.append(row)
+
+    db = sqlite3.connect(DATABASE)
+
+    with db:
+
+        cur = db.cursor()
+
+        cur.execute("DROP TABLE IF EXISTS users")
+        cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, keuze INT )")
+        cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?)", usertable)
+        db.commit()
 
 def sel():
 
@@ -187,3 +227,7 @@ def generate_password(length):
                 '23456789')
     pw = length * ' '
     return ''.join([random.choice(pw_set) for c in pw])
+
+
+if __name__=='__main__':
+    print "This is db_tools.py!"
