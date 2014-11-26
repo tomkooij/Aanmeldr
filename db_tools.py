@@ -115,11 +115,9 @@ def read_users_and_write_passwords():
                 leerlingnummer = row[0]
                 password = generate_password(10)
                 salt = generate_password(64)
-<<<<<<< HEAD
+
                 naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
-=======
-                naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # stip illegal chars
->>>>>>> 85ed627fcb0780cda7358681c8b65cf22fad4aa2
+
                 print [leerlingnummer, naam, password, salt, 0]
                 writer.writerow([leerlingnummer, naam, password, salt, 0])
 
