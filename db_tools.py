@@ -109,18 +109,29 @@ def read_users_and_write_passwords():
     with open('users.csv', 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=';', quoting=csv.QUOTE_NONE)
         with open('output.csv', 'wb') as f:
-            writer = csv.writer(f)
+            write_passwd = csv.writer(f, dialect='excel')
+            with open('mailmerge.csv', 'wb') as f2:
+                mailmerge = csv.writer(f2,  dialect='excel')
+                mailmerge.writerow(['id', 'naam', 'ww','email'])
 
-            for row in reader:
-                leerlingnummer = row[0]
-                password = generate_password(10)
-                salt = generate_password(64)
+                for row in reader:
+                    leerlingnummer = row[0]
+                    email = row[5]
 
-                naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
+                    password = generate_password(10)
+                    salt = generate_password(64)
 
-                print [leerlingnummer, naam, password, salt, 0]
-                writer.writerow([leerlingnummer, naam, password, salt, 0])
+                    # create the salted hash form password
+                    m = hashlib.sha1()
+                    m.update(salt+password)
+                    hashedpassword = m.hexdigest()  # the salted hash
 
+                    naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
+
+                    print [leerlingnummer, naam, password, email]
+
+                    write_passwd.writerow([leerlingnummer, naam, hashedpassword, salt, 0])
+                    mailmerge.writerow([leerlingnummer, naam, password, email])
 
 def create_userdb():
 
@@ -132,12 +143,8 @@ def create_userdb():
         for row in reader:
             # read password and salt from csv
             db_salt = row[3]
-            wachtwoord = row[2]     # the real password
+            wachtwoord = row[2]     # salted hash
 
-            # create the salted hash for the passwd csv
-            m = hashlib.sha1()
-            m.update(db_salt+wachtwoord)
-            row[2] = m.hexdigest()  # the salted hash
             print row
             usertable.append(row)
 
@@ -235,4 +242,9 @@ def generate_password(length):
 
 
 if __name__=='__main__':
-    print "This is db_tools.py!"
+    print "This is db_tools.py!\n"
+    print "Setup database:"
+    print "read_users_and_write_passwords() reads users.csv and writes output.csv"
+    print "create_userdb() writes user/pass from output.csv to the database"
+    print "write_workshops() writes the workshops to the database"
+    print "\nprint_db() to dump the database"
