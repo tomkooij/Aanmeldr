@@ -128,8 +128,11 @@ def create_userdb():
         reader = csv.reader(csvfile, delimiter=',')
 
         for row in reader:
+            # read password and salt from csv
             db_salt = row[3]
             wachtwoord = row[2]     # the real password
+
+            # create the salted hash for the passwd csv
             m = hashlib.sha1()
             m.update(db_salt+wachtwoord)
             row[2] = m.hexdigest()  # the salted hash
