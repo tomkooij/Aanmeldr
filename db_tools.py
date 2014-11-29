@@ -109,15 +109,18 @@ def read_users_and_write_passwords():
 
     with open('users.csv', 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=';', quoting=csv.QUOTE_NONE)
-        with open('output.csv', 'wb') as f:
+        with open('passwd.csv', 'wb') as f:
             write_passwd = csv.writer(f, dialect='excel')
             with open('mailmerge.csv', 'wb') as f2:
                 mailmerge = csv.writer(f2,  dialect='excel')
                 mailmerge.writerow(['id', 'naam', 'ww','email'])
 
+                reader.next() # skip first row (legend)
                 for row in reader:
-                    leerlingnummer = row[0]
-                    email = row[5]
+                    #print row
+                    leerlingnummer = int(row[0])
+                    klas = int(row[5][0])
+                    email = row[4]
 
                     password = generate_password(10)
                     salt = generate_password(64)
@@ -128,24 +131,22 @@ def read_users_and_write_passwords():
                     hashedpassword = m.hexdigest()  # the salted hash
 
                     naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
+                    voornaam = naam.split(' ')[0]
 
-                    print [leerlingnummer, naam, password, email]
+                    print [leerlingnummer, voornaam, klas, email]
 
-                    write_passwd.writerow([leerlingnummer, naam, hashedpassword, salt, 0])
-                    mailmerge.writerow([leerlingnummer, naam, password, email])
+                    write_passwd.writerow([leerlingnummer, naam, hashedpassword, salt, klas, 0])
+                    mailmerge.writerow([leerlingnummer,voornaam, password, email, naam])
 
 def create_userdb():
 
     usertable = []
 
-    with open('output.csv', 'r') as csvfile:
+    with open('passwd.csv', 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
 
+        # copy CSV file tot usertable list
         for row in reader:
-            # read password and salt from csv
-            db_salt = row[3]
-            wachtwoord = row[2]     # salted hash
-
             print row
             usertable.append(row)
 
@@ -156,8 +157,8 @@ def create_userdb():
         cur = db.cursor()
 
         cur.execute("DROP TABLE IF EXISTS users")
-        cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, keuze INT )")
-        cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?)", usertable)
+        cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, klas INT, keuze INT )")
+        cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)", usertable)
         db.commit()
 
 def sel():
