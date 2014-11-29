@@ -17,10 +17,8 @@ from flask_sslify import SSLify
 
 import hashlib, os, binascii # crypto voor wachtwoorden
 
-# configuration
-DATABASE = 'flaskr.db'
-DEBUG = True # SSLify requires DEBUG = False
-SECRET_KEY = 'This should be changed in a production enviroment'
+# import configuration
+from configuration import *
 
 # create our little application :)
 app = Flask(__name__)

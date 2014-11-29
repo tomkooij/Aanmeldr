@@ -15,7 +15,8 @@ import hashlib, os, binascii # crypto voor wachtwoorden
 import random
 import csv
 
-DATABASE = 'flaskr.db'
+# configuration (DATABASE location)
+from configuration import DATABASE
 
 def print_db():
   db = sqlite3.connect(DATABASE)
