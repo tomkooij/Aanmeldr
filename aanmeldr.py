@@ -67,69 +67,69 @@ def kies_workshop():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
+
     cur = db.execute('select * from workshops')
     workshops = cur.fetchall()
+
 
     # maak een int van de keuze die in unicode binnenkomt
     # vang onbekende keuzes af
     tmp_keuze = request.form['keuze']
     if str(tmp_keuze).isdigit:
-      keuze = int(tmp_keuze)
+        keuze = int(tmp_keuze)
     else:
-      keuze = 0
+        keuze = 0
 
     # als op de een of andere manier de worshop ID groter is dan het aantal
     if (keuze > (len(workshops)-1)):
-      flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.','error')
-      keuze = 0
+        flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.','error')
+        keuze = 0
 
     # zijn er nog plaatsen? Het kan best zijn dat de workshop inmiddels vol is
     # kies_workshop POST kan 2 dagen na de laaste GET van show_entries zijn
     if (workshops[keuze][2] < 1):
-      flash('Sorry! Workshop is niet meer beschikbaar','error')
-      return redirect(url_for('show_entries'))
+        flash('Sorry! Workshop is niet meer beschikbaar','error')
+        return redirect(url_for('show_entries'))
     elif (keuze == session['keuze']):
-      # keuze hetzelfde is als huidige kueze
-      if (keuze == 0):
-        flash('Niet ingeschreven. Maak een keuze: ','flash')
-      else:
-        flash('Je bent al ingeschreven voor deze workshop!','error')
-      return redirect(url_for('show_entries'))
+        # keuze hetzelfde is als huidige kueze
+        if (keuze == 0):
+            flash('Niet ingeschreven. Maak een keuze: ','flash')
+        else:
+            flash('Je bent al ingeschreven voor deze workshop!','error')
+        return redirect(url_for('show_entries'))
     else:
-#      flash('DEBUG: Attempting to write the workshop database')
 
-      # schrijf eerst de workshop database
-      # uitschrijven huidige keuze (staat in cookie)
-      cur = db.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = ? ", [session['keuze']])
-      # inschrijven nieuwe keuze
-      # Dit is heel eng want plaatsen kan kleiner worden dan 0 helaas heeft sqllite geen GREATEST en MAX werkt niet
-      # GETEST : werkt nog wel met "plaatsen = -10"
-      # misschien moet plaatsen een unsigned int worden en dan afvangen van de error?
-      cur = db.execute("UPDATE workshops set plaatsen = plaatsen - 1 where id = ?", [keuze])
-      db.commit()
+        # schrijf eerst de workshop database
+        # uitschrijven huidige keuze (staat in cookie)
+        cur = db.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = ? ", [session['keuze']])
+        # inschrijven nieuwe keuze
+        # Dit is heel eng want plaatsen kan kleiner worden dan 0 helaas heeft sqllite geen GREATEST en MAX werkt niet
+        # GETEST : werkt nog wel met "plaatsen = -10"
+        # misschien moet plaatsen een unsigned int worden en dan afvangen van de error?
+        cur = db.execute("UPDATE workshops set plaatsen = plaatsen - 1 where id = ?", [keuze])
+        db.commit()
+        #
+        # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
+        #
 
-      #
-      # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
-      #
-
-      # Schrijf nu de keuze in de user database
-      #
-#      flash('DEBUG: Attempting to write the user database')
-      db.execute("UPDATE users set keuze = ? where id = ? ",
+        # Schrijf nu de keuze in de user database
+        #
+        #      flash('DEBUG: Attempting to write the user database')
+        db.execute("UPDATE users set keuze = ? where id = ? ",
                    [keuze, session['username']])
-      db.commit()
-      #
-      # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
-      #
+        db.commit()
+        #
+        # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
+        #
 
 
-      session['keuze'] = keuze  # update cookie
-      if (keuze == 0):
-        flash('Je bent nog niet (of niet meer) ingeschreven!','error')
-      else:
-        flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
+        session['keuze'] = keuze  # update cookie
+        if (keuze == 0):
+            flash('Je bent nog niet (of niet meer) ingeschreven!','error')
+        else:
+            flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
 
-      return redirect(url_for('show_entries'))
+        return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
