@@ -26,7 +26,11 @@
         {% endif %}
 
 
-        {{ workshop[1] }} (nog {{ workshop[2] }} plaatsen)
+        {{ workshop[1] }}
+        <!-- debug informatie
+        (nog {{ workshop[2] }} plaatsen)
+        -->
+
         {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
            <b> (huidige keuze) </b>
         {% endif %}
