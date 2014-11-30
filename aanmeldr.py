@@ -41,7 +41,7 @@ def get_db():
     """
     top = _app_ctx_stack.top
     if not hasattr(top, 'sqlite_db'):
-        sqlite_db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
+        sqlite_db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
         #sqlite_db.row_factory = sqlite_db
         top.sqlite_db = sqlite_db
 
