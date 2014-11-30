@@ -20,6 +20,9 @@ import hashlib, os, binascii # crypto voor wachtwoorden
 # import configuration
 from configuration import *
 
+
+
+
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -38,6 +41,24 @@ def get_db():
 
     return top.sqlite_db
 
+#
+# user defined function for show_entries.html Jinja template
+#
+
+@app.context_processor
+def utility_processor():
+
+    # Zit deze leerling in een klas die zich mag inschrijven voor een bepaalde workshop?
+    # Voodoo functie:
+    # filter (uit de workshop tabel) = 2**klas, bijvoorbeeld 2**1+2**2+2**3 voor onderbouw
+    # klas (uit user tabel dan wel sessie cookie)= 1, 2, 3...
+    #
+    def workshop_voor_deze_klas(klas, filter):
+        if (2**klas & filter):
+            return 1
+        else:
+            return 0
+    return dict(workshop_voor_deze_klas=workshop_voor_deze_klas)
 
 @app.teardown_appcontext
 def close_db_connection(exception):
@@ -175,6 +196,7 @@ def login():
           session['username'] = leerlingnummer
           session['naam'] = user['naam']
           session['keuze'] = user['keuze']
+          session['klas'] = user['klas']
           flash('Welkom %s. Je bent ingelogd.' % user['naam'],'flash')
           if session['keuze'] > 0:
             flash('Je hebt al een workshop gekozen!','error')

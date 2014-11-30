@@ -13,30 +13,34 @@
       {% for workshop in workshops %}
         <!-- CCS3 material design radio buttons alles tussen "label" -->
 
+        {% if workshop_voor_deze_klas(session.klas, workshop[3]) %}
 
-        <input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
-        {% if workshop[0]==session.keuze %}
-          checked
+            <input type="radio" value={{ workshop[0] }} class=checkbox name="keuze"
+            {% if workshop[0]==session.keuze %}
+              checked
+            {% endif %}
+
+            {% if (workshop[2] < 1) %}
+              disabled /> <i> (VOL) </i>
+            {% else %}
+              />
+            {% endif %}
+
+
+
+            {{ workshop[1] }}
+            <!-- debug informatie
+            (nog {{ workshop[2] }} plaatsen)
+            -->
+
+            {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
+               <b> (huidige keuze) </b>
+            {% endif %}
+
+            <br> <!-- einde radio buttons -->
         {% endif %}
-
-        {% if (workshop[2] < 1) %}
-          disabled /> <i> (VOL) </i>
-        {% else %}
-          />
-        {% endif %}
-
-
-        {{ workshop[1] }}
-        <!-- debug informatie
-        (nog {{ workshop[2] }} plaatsen)
-        -->
-
-        {% if ((workshop[0]==session.keuze) and (session.keuze > 0)) %}
-           <b> (huidige keuze) </b>
-        {% endif %}
-
-      <br> <!-- einde radio buttons -->
-
+            <!-- deze workshop is niet beschikbaar -->
+    
       {% endfor %}
 
     {% if (session.keuze > 0) %}

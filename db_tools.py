@@ -49,18 +49,25 @@ def print_workshops():
       for row in rows:
           print row
 
-
+klas1 = 2**1
+klas2 = 2**2
+klas3 = 2**3
+klas4 = 2**4
+klas5 = 2**5
+klas6 = 2**6
+onderbouw = klas1+klas2+klas3
+bovenbouw = klas4+klas5+klas6
+alles = onderbouw+bovenbouw
 
 def write_workshops():
-    workshops = ( (0,"Geen keuze",100000),
-          (1,"Film", 5),
-          (2,"Sport", 5),
-          (3,"Dansen", 15),
-          (4,"Kerstkaarten maken", 5),
-          (5,"Robots bouwen", 5),
-          (6,"l33t h4x0rs", 1) )
-
-
+    workshops = ( (0,"Geen keuze",100000, alles  ),
+          (1,"Film alleen bovenbouw", 5, bovenbouw ),
+          (2,"Sport alle klassen", 5, alles ),
+          (3,"Dansen klas 1", 15 , klas1 ),
+          (4,"Kerstkaarten maken onderbouw", 5, onderbouw),
+          (5,"Robots bouwen alle klassen", 5, alles),
+          (6,"l33t h4x0rs alle klassen", 1, alles),
+          (7,"dit is alleen voor klas 3 ", 0, klas3) )
 
     db = sqlite3.connect(DATABASE)
 
@@ -73,8 +80,8 @@ def write_workshops():
         #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
 
         cur.execute("DROP TABLE IF EXISTS workshops")
-        cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT )")
-        cur.executemany("INSERT INTO workshops VALUES(?, ?, ?)", workshops)
+        cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT, filter INT )")
+        cur.executemany("INSERT INTO workshops VALUES(?, ?, ?, ?)", workshops)
         db.commit()
 
 
