@@ -9,7 +9,10 @@
 #  print_db()
 
 
-import sqlite3
+#import sqlite3
+import MySQLdb
+import MySQLdb.cursors
+
 import sys
 import hashlib, os, binascii # crypto voor wachtwoorden
 import random
@@ -19,27 +22,28 @@ import csv
 from configuration import DATABASE
 
 def print_db():
-  db = sqlite3.connect(DATABASE)
+    db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
 
-  with db:
-      db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+    with db:
+#         db.row_factory = sqlite3.Row   # this enables the dictionary cursor
 
-      cur = db.cursor()
-      cur.execute("SELECT * FROM users")
+        cur = db.cursor()
+        cur.execute("SELECT * FROM users")
 
-      rows = cur.fetchall()
+        rows = cur.fetchall()
 
-      for row in rows:
-          print row
+        for row in rows:
+            print row
 
-      for row in rows:
-          print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
+#        for row in rows:
+#            print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
 
 def print_workshops():
-  db = sqlite3.connect(DATABASE)
+  #db = sqlite3.connect(DATABASE)
+  db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123', cursorclass=MySQLdb.cursors.DictCursor)
 
   with db:
-      db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+#      db.row_factory = MySQLdb.Row   # this enables the dictionary cursor
 
       cur = db.cursor()
       cur.execute("SELECT * FROM workshops")
@@ -69,7 +73,8 @@ def write_workshops():
           (6,"l33t h4x0rs alle klassen", 1, alles),
           (7,"dit is alleen voor klas 3 ", 0, klas3) )
 
-    db = sqlite3.connect(DATABASE)
+    #db = sqlite3.connect(DATABASE)
+    db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
 
     with db:
 
@@ -81,7 +86,8 @@ def write_workshops():
 
         cur.execute("DROP TABLE IF EXISTS workshops")
         cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT, filter INT )")
-        cur.executemany("INSERT INTO workshops VALUES(?, ?, ?, ?)", workshops)
+        db.commit()
+        cur.executemany("INSERT INTO workshops VALUES(%s, %s, %s, %s)", workshops)
         db.commit()
 
 
@@ -157,7 +163,7 @@ def create_userdb():
             print row
             usertable.append(row)
 
-    db = sqlite3.connect(DATABASE)
+    db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
 
     with db:
 
@@ -165,20 +171,21 @@ def create_userdb():
 
         cur.execute("DROP TABLE IF EXISTS users")
         cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, klas INT, keuze INT )")
-        cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?)", usertable)
+        cur.executemany("INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s)", usertable)
         db.commit()
 
 def sel():
 
-  db = sqlite3.connect(DATABASE)
+  db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
 
   with db:
       cur = db.cursor()
 
-      cur.execute("SELECT Naam, Wachtwoord FROM users WHERE Id=1234")
+      cur.execute("select naam,wachtwoord,salt,keuze,klas from users where id = 2651")
       db.commit()
 
       row = cur.fetchone()
+      print row
       print row[0], row[1]
 
 
