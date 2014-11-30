@@ -8,6 +8,10 @@
 
 """
 
+import logging
+from logging.handlers import RotatingFileHandler
+from time import time
+
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, _app_ctx_stack
@@ -101,6 +105,9 @@ def kies_workshop():
     else:
         keuze = 0
 
+    #schrijf de logfile, dit is echt heel ernstige beuncode
+    app.logger.info('%s gebruiker %d probeert %d', time(), session['username'], keuze)
+
     # als op de een of andere manier de worshop ID groter is dan het aantal
     if (keuze > (len(workshops)-1)):
         flash('OEPS! Er is iets fout gegaan. Je bent waarschijnlijk niet meer ingeschreven.','error')
@@ -149,6 +156,9 @@ def kies_workshop():
             flash('Je bent nog niet (of niet meer) ingeschreven!','error')
         else:
             flash('Je hebt nu gekozen voor: '+str(workshops[keuze][1]),'flash')
+
+        #schrijf de logfile, dit is echt heel ernstige beuncode
+        app.logger.info('%s gebruiker %d ingeschreven %d', time(), session['username'], keuze)
 
         return redirect(url_for('show_entries'))
 
@@ -200,8 +210,14 @@ def login():
           flash('Welkom %s. Je bent ingelogd.' % user['naam'],'flash')
           if session['keuze'] > 0:
             flash('Je hebt al een workshop gekozen!','error')
+
+          #schrijf de logfile
+          app.logger.info('%s login %d', time(), session['username'])
           return redirect(url_for('show_entries'))
+
         else:
+          #schrijf de logfile, dit is echt heel ernstige beuncode
+          app.logger.info('%s failpasswd %d', time(), leerlingnummer)
           error = "Login mislukt!"
 
   return render_template('login.html', error=error)
@@ -213,4 +229,7 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
+    handler = RotatingFileHandler('aanmeldr.log', maxBytes=10000, backupCount=100)
+    handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(handler)
     app.run()
