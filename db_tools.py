@@ -11,9 +11,10 @@
 
 import sqlite3
 import sys
-import hashlib, os, binascii # crypto voor wachtwoorden
+import hashlib, os # crypto voor wachtwoorden
 import random
 import csv
+import random
 
 # configuration (DATABASE location)
 from configuration import DATABASE
@@ -34,6 +35,72 @@ def print_db():
 
       for row in rows:
           print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
+#
+# voor testen: vul de TABLE users met random keuzes
+#
+def fill_random_keuzes():
+    db = sqlite3.connect(DATABASE)
+
+    userkeuzes = []
+
+    with db:
+
+        cur = db.cursor()
+        cur.execute("SELECT keuze,id FROM users")
+        rows = cur.fetchall()
+
+        for row in rows:
+            tmp = list(row) # fetchall() does tuples
+            tmp[0] = random.randint(1,5) # random workshop keuze
+            userkeuzes.append(tmp)
+
+        cur.executemany("UPDATE users SET keuze = ? WHERE id = ?", userkeuzes)
+        db.commit()
+
+def print_keuzes():
+    db = sqlite3.connect(DATABASE)
+
+    with db:
+        db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+
+        cur = db.cursor()
+        cur.execute("SELECT id,keuze FROM users")
+
+        rows = cur.fetchall()
+
+        for row in rows:
+            print "%s %s" % (row["id"], row["keuze"]) # use the dictionary cursor
+
+#
+# Maak een tabel van ingeschreven leerlingen (en sla op als CSV ofzo)
+#
+ingeschreven = [] # de grote inshrijf lijst
+
+def process_workshop_keuzes():
+    db = sqlite3.connect(DATABASE)
+
+    with db:
+        db.row_factory = sqlite3.Row   # this enables the dictionary cursor
+
+        cur = db.cursor()
+        cur.execute("SELECT id,naam, klas, keuze FROM users")
+
+        rows = cur.fetchall()
+
+        for workshop in workshops:
+            print "workshop: ", workshop[1]
+            lijst_deze_workshop = [workshop[0], workshop[1], workshop[2]]
+            for row in rows:
+                if (row["keuze"] == workshop[0]):  # user heeft deze workshop gekozen
+                    print " * Ingeschreven: ", row["naam"], row["klas"]
+                    lijst_deze_workshop.append(row["id"])
+            ingeschreven.append(lijst_deze_workshop)
+
+
+def print_workshop_keuzes():
+    for workshop in ingeschreven:
+        print "Workshop: ",workshop[0], workshop[1]
+        print "Ingeschreven %d van %d " % (len(workshop), workshop[2])
 
 def print_workshops():
   db = sqlite3.connect(DATABASE)
@@ -59,15 +126,17 @@ onderbouw = klas1+klas2+klas3
 bovenbouw = klas4+klas5+klas6
 alles = onderbouw+bovenbouw
 
+workshops = ( (0,"Geen keuze",100000, alles  ),
+      (1,"Film alleen bovenbouw", 5, bovenbouw ),
+      (2,"Sport alle klassen", 5, alles ),
+      (3,"Dansen klas 1", 15 , klas1 ),
+      (4,"Kerstkaarten maken onderbouw", 5, onderbouw),
+      (5,"Robots bouwen alle klassen", 5, alles),
+      (6,"l33t h4x0rs alle klassen", 1, alles),
+      (7,"dit is alleen voor klas 3 ", 0, klas3) )
+
 def write_workshops():
-    workshops = ( (0,"Geen keuze",100000, alles  ),
-          (1,"Film alleen bovenbouw", 5, bovenbouw ),
-          (2,"Sport alle klassen", 5, alles ),
-          (3,"Dansen klas 1", 15 , klas1 ),
-          (4,"Kerstkaarten maken onderbouw", 5, onderbouw),
-          (5,"Robots bouwen alle klassen", 5, alles),
-          (6,"l33t h4x0rs alle klassen", 1, alles),
-          (7,"dit is alleen voor klas 3 ", 0, klas3) )
+
 
     db = sqlite3.connect(DATABASE)
 
@@ -109,7 +178,7 @@ def write_testdb():
 
       cur.execute("DROP TABLE IF EXISTS users")
       cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, keuze INT )")
-      cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?)", testtabel)
+      cur.executemany("INSERT INTO users VALUES(? ?, ?, ?, ?)", testtabel)
       db.commit()
 
 def read_users_and_write_passwords():
@@ -257,3 +326,4 @@ if __name__=='__main__':
     print "create_userdb() writes user/pass from output.csv to the database"
     print "write_workshops() writes the workshops to the database"
     print "\nprint_db() to dump the database"
+    print "\nprocess_workshop_keuzes() geeft de gewenste output na inschrijven"
