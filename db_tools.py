@@ -65,13 +65,35 @@ alles = onderbouw+bovenbouw
 
 def write_workshops():
     workshops = ( (0,"Geen keuze",100000, alles  ),
-          (1,"Film alleen bovenbouw", 5, bovenbouw ),
-          (2,"Sport alle klassen", 5, alles ),
-          (3,"Dansen klas 1", 15 , klas1 ),
-          (4,"Kerstkaarten maken onderbouw", 5, onderbouw),
-          (5,"Robots bouwen alle klassen", 5, alles),
-          (6,"l33t h4x0rs alle klassen", 1, alles),
-          (7,"dit is alleen voor klas 3 ", 0, klas3) )
+          (1,"Bootcamp", 20, alles ),
+          (2,"Waterpolo", 25, klas3+klas4+klas5+klas6 ),
+          (3,"Sporten in de Mammoet", 95 , onderbouw ),
+          (4,"Vogelen", 15, alles),
+          (5,"Debatteren", 40, alles),
+          (6,"Kerstballen maken", 25, alles),
+          (7,"EHBO", 20, alles),
+          (8,"Film Flypaper", 30, onderbouw ),
+          (9,"Film Pans Labyrinth", 30, onderbouw ),
+          (10,"Film Shawshank redemption" 30 , alles ),
+          (11,"Film Filmhuis", 75, bovenbouw),
+          (12,"Dansen Step by Step", 40, alles),
+          (13,"Schaken", 40, alles),
+          (14,"Theaterworkshop (school)", 12, alles),
+          (15,"Yoga. Klankworkshop", 25, alles),
+          (16,"Theatertechniek", 10, alles),
+          (17,"Zumba", 30, alles),
+          (18,"Voedselbank", 10, alles),
+          (19,"Striptekenen", 18, alles),
+          (20,"Portrettekenen", 16, alles),
+          (21,"Fotografie", 16, alles),
+          (22,"Theater (kunstpunt)", 20, alles),
+          (23,"Musical", 20, alles),
+          (24,"Popzang", 16, alles),
+          (25,"Logo Design", 18, alles),
+          (23,"Power tape", 16, alles),
+          (24,"Streetdance", 20, alles),
+          (25,"Ritmesectieworkshop drum", 10, alles)
+          )
 
     #db = sqlite3.connect(DATABASE)
     db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
