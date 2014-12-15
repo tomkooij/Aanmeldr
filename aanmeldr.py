@@ -76,6 +76,8 @@ def close_db_connection(exception):
 
 @app.route('/', methods=['GET'])
 def show_entries():
+
+
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -92,6 +94,8 @@ def show_entries():
 
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
+    # volgende regel sluit de site
+    return render_template('offline.html')
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
@@ -176,6 +180,9 @@ def query_db(query, args=(), one=False):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+  # volgende regel sluit de site
+  return render_template('offline.html')
+
   error = None
   if request.method == 'POST':
 
