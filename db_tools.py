@@ -53,13 +53,14 @@ def print_workshops():
       for row in rows:
           print row
 
-klas1 = 2**1
+klas1 = 2**1 # doet niet mee!!!
 klas2 = 2**2
 klas3 = 2**3
 klas4 = 2**4
 klas5 = 2**5
 klas6 = 2**6
-onderbouw = klas1+klas2+klas3
+# LET OP!!! KLAS 1 doet niet mee!!
+onderbouw = klas2+klas3
 bovenbouw = klas4+klas5+klas6
 alles = onderbouw+bovenbouw
 
@@ -99,6 +100,10 @@ workshops = ( (0,"Geen keuze",100000, alles  ),
       (33,"EXTRA: schaken (alleen bovenbouw)",20,bovenbouw)
       )
 def write_workshops():
+
+    # deze functie OVERSCHRIJFT DE DATABASE INCLUSIEF KEUZES!
+    print "Let's don't and say we did!"
+    return 1
 
     #db = sqlite3.connect(DATABASE)
     db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
@@ -177,6 +182,13 @@ def read_users_and_write_passwords():
                     mailmerge.writerow([leerlingnummer,voornaam, password, email, naam])
 
 def create_userdb():
+    """
+    Lees passwd.csv en maak user table
+    """
+
+    # Overschrijf de database!!!!!
+    print "Let's don't and say we did!"
+    return 1
 
     usertable = []
 
@@ -188,7 +200,7 @@ def create_userdb():
             print row
             usertable.append(row)
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
 
     with db:
 
