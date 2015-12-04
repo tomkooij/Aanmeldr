@@ -9,6 +9,8 @@
 #  print_db()
 
 
+PASSWORD = 'zorro567' # dummy password for github.
+
 #import sqlite3
 import MySQLdb
 import MySQLdb.cursors
@@ -32,15 +34,15 @@ def print_db():
 
         rows = cur.fetchall()
 
-        for row in rows:
-            print row
+        for i, row in enumerate(rows):
+            print i, row
 
 #        for row in rows:
 #            print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
 
 def print_workshops():
   #db = sqlite3.connect(DATABASE)
-  db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123', cursorclass=MySQLdb.cursors.DictCursor)
+  db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD, cursorclass=MySQLdb.cursors.DictCursor)
 
   with db:
 #      db.row_factory = MySQLdb.Row   # this enables the dictionary cursor
@@ -64,49 +66,52 @@ onderbouw = klas2+klas3
 bovenbouw = klas4+klas5+klas6
 alles = onderbouw+bovenbouw
 
+
 workshops = ( (0,"Geen keuze",100000, alles  ),
-      (1,"Bootcamp", 20, alles ),
-      (2,"Waterpolo", 0, klas3+klas4+klas5+klas6 ),
-      (3,"Sporten in de Mammoet", 95 , onderbouw ),
-      (4,"Vogelen", 15, alles),
-      (5,"Debatteren", 40, alles),
-      (6,"Kerstballen maken", 25, alles),
-      (7,"EHBO", 20, alles),
-      (8,"Film Flypaper", 30, onderbouw ),
-      (9,"Film Pans Labyrinth", 30, onderbouw ),
-      (10,"Film Shawshank redemption", 30 , alles ),
-      (11,"Film Filmhuis", 75, bovenbouw),
-      (12,"Dansen Step by Step", 40, alles),
-      (13,"Schaken", 40, alles),
-      (14,"Theaterworkshop (school)", 12, alles),
-      (15,"Yoga. Klankworkshop", 25, alles),
-      (16,"Theatertechniek", 10, alles),
-      (17,"Zumba", 30, alles),
-      (18,"Voedselbank", 10, alles),
-      (19,"Striptekenen", 18, alles),
-      (20,"Portrettekenen", 16, alles),
-      (21,"Fotografie", 16, alles),
-      (22,"Theater (kunstpunt)", 20, alles),
-      (23,"Musical", 20, alles),
-      (24,"Popzang", 16, alles),
-      (25,"Logo Design", 18, alles),
-      (26,"Power tape", 16, alles),
-      (27,"Streetdance", 20, alles),
-      (28,"Ritmesectieworkshop drum", 10, alles),
-      (29,"Ritmesectieworkshop bas",10, alles),
-      (30,"Gitaar",15,alles),
-      (31,"Ik help bij een workshop",15,alles),
-      (32,"EXTRA: bordspellen",20,bovenbouw),
-      (33,"EXTRA: schaken (alleen bovenbouw)",20,bovenbouw)
-      )
+# klas 2
+    (1, "Sport in de Mammoet ", 40 , klas2),
+    (2, "Circus in Mammoet ", 10, klas2),
+    (3, "Workshop Powertape", 74, klas2),
+    (4, "Workshop Theater ", 20, klas2),
+    (5, "Workshop Musical ", 20, klas2),
+    (6, "Workshop Striptekenen ", 18, klas2),
+    (7, "Vogels kijken ", 3, klas2),
+    (8, "Schaken ", 4, klas2),
+#klas 3
+    (9, "Sport in Mammoet ", 40, klas3),
+    (10, "Circus in Mammoet", 10, klas3),
+    (11, "Workshop Ritme Bas", 10, klas3),
+    (12, "Workshop Gitaar", 15, klas3),
+    (13, "Workshop Sing/songwriter ", 10, klas3),
+    (14, "Workshop Popzang ", 20, klas3),
+    (15, "Vogels kijken ", 6, klas3),
+    (16, "Workshop Weihnachtsoratorium (Om)", 10, klas3),
+    (17, "Schaken", 4, klas3),
+#klas 4
+    (18, "Step by Step ", 40, klas4),
+    (19, "Waterpolo ", 20, klas4),
+    (20, "Bootcamp met Robin en Noor ", 20, klas4),
+    (21, "Streetdance (garenspinnerij)", 20, klas4),
+    (22, "Vogels kijken", 6, klas4),
+    (23, "Workshop Weihnachtsoratorium (Om)", 10, klas4),
+    (24, "Schaken", 4, klas4),
+#klas 5+6
+    (25, "Film Premiere: Publieke werken. Cinema Gouda", 200, klas5+klas6),
+#klas6
+    (26, "Workshop kunstpunt: 3D tekenen", 12, klas5+klas6),
+    (27, "Workshop kunstpunt: animatie", 15, klas5+klas6),
+    (28, "Vogels kijken", 3, klas5+klas6),
+    )
+
+
 def write_workshops():
 
     # deze functie OVERSCHRIJFT DE DATABASE INCLUSIEF KEUZES!
-    print "Let's don't and say we did!"
-    return 1
+    #print "Let's don't and say we did!"
+    #return 1
 
     #db = sqlite3.connect(DATABASE)
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
 
     with db:
 
@@ -200,7 +205,7 @@ def create_userdb():
             print row
             usertable.append(row)
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
 
     with db:
 
@@ -213,7 +218,7 @@ def create_userdb():
 
 def sel():
 
-  db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='geheim123')
+  db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
 
   with db:
       cur = db.cursor()
@@ -294,13 +299,19 @@ def generate_password(length):
     return ''.join([random.choice(pw_set) for c in pw])
 
 
-#
-# Maak een tabel van ingeschreven leerlingen (en sla op als CSV ofzo)
-#
-ingeschreven = [] # de grote inshrijf lijst
+
 
 def process_workshop_keuzes():
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567', cursorclass=MySQLdb.cursors.DictCursor)
+
+    #
+    # Maak een tabel van ingeschreven leerlingen (en sla op als CSV ofzo)
+    #
+    ingeschreven = [] # de grote inshrijf lijst
+
+    global ingeschreven     # HACK...
+
+
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD, cursorclass=MySQLdb.cursors.DictCursor)
 
     with db:
         cur = db.cursor()
@@ -319,6 +330,12 @@ def process_workshop_keuzes():
                     lijst_deze_workshop.append(row["id"])
             lijst_deze_workshop.append(tellertje) # laatste item is aantal ingeschreven... brrrr hack
             ingeschreven.append(lijst_deze_workshop)
+
+    #
+    # ER ZIT EEN ENORME BUG IN DEZE CODE. Direct na inschrijven ontstaat er een database error volgens print_workshops() en ingeschreven = [] bevat dan
+    # meerdere kopien van de lijst
+    #
+
     print_workshop_keuzes()
 
 # schrijf naar csv
@@ -333,7 +350,7 @@ def write_ingeschreven():
 
 def save_db_to_csv():
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
 
     with db:
         cur = db.cursor()
@@ -348,7 +365,8 @@ def save_db_to_csv():
 
 
 def print_workshop_keuzes():
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    print "enter function print_workshop_keuzes()"
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
 
     plaatsen = {}
 
@@ -364,6 +382,8 @@ def print_workshop_keuzes():
             plaatsen[row[0]]=row[1]
 
     nog_vrij = 0
+
+    #print "DEBUG: ingeschreven (global list)=",ingeschreven
 
     for workshop in ingeschreven:
         #print "Workshop: ",workshop[0], workshop[1]
@@ -396,7 +416,7 @@ def print_workshop_keuzes():
 def set_plaatsen(workshop_id, plaatsen):
     print "Ik zet workshop %d op %d" % (workshop_id, plaatsen)
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
     with db:
         cur = db.cursor()
         cur.execute("UPDATE workshops set plaatsen = %s where id = %s ", [plaatsen, workshop_id])
@@ -405,7 +425,7 @@ def set_plaatsen(workshop_id, plaatsen):
 def set_desc(workshop_id, omschrijving):
     print "Ik zet workshop %d titel op %s" % (workshop_id, omschrijving)
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
     with db:
         cur = db.cursor()
         cur.execute("UPDATE workshops set titel = %s where id = %s ", [omschrijving, workshop_id])
@@ -415,10 +435,11 @@ def set_desc(workshop_id, omschrijving):
 # hotfix voor workshop toevoegen
 #GEVAARLIJK!!!!
 def hotfix_NIETGEBRUIKEN():
-    #print "NIET GEBRUIKEN!!!!"
-    #return 0
+    print "NIET GEBRUIKEN!!!"
+    print "Let's don't and say we did...!?"
+    return 0
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd='zorro567')
+    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=PASSWORD)
     # heb je deze ook al in de workshops lijst toegevoegd!?!?!?!?
     temp = ((32,"EXTRA: bordspellen",20,bovenbouw),
     (33,"EXTRA: schaken (alleen bovenbouw)",20,bovenbouw))
