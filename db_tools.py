@@ -15,16 +15,16 @@ import MySQLdb
 import MySQLdb.cursors
 
 import sys
-import hashlib, os, binascii # crypto voor wachtwoorden
+import hashlib, os # crypto voor wachtwoorden
 import random
 import csv
+import random
 
 # configuration (DATABASE location)
 #from configuration import DATABASE
 from configuration import MYSQLPASS
 
 PASSWORD = MYSQLPASS
-
 
 def print_db():
     db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
@@ -42,6 +42,7 @@ def print_db():
 
 #        for row in rows:
 #            print "%s %s" % (row["naam"], row["keuze"]) # use the dictionary cursor
+
 
 def print_workshops():
   #db = sqlite3.connect(DATABASE)
@@ -68,6 +69,7 @@ klas6 = 2**6
 onderbouw = klas2+klas3
 bovenbouw = klas4+klas5+klas6
 alles = onderbouw+bovenbouw
+
 
 
 workshops = ( (0,"Geen keuze",100000, alles  ),
@@ -108,6 +110,7 @@ workshops = ( (0,"Geen keuze",100000, alles  ),
 
 
 def write_workshops():
+
 
     # deze functie OVERSCHRIJFT DE DATABASE INCLUSIEF KEUZES!
     #print "Let's don't and say we did!"
@@ -153,7 +156,7 @@ def write_testdb():
 
       cur.execute("DROP TABLE IF EXISTS users")
       cur.execute("CREATE TABLE users(id INT, naam TEXT, wachtwoord TEXT, salt TEXT, keuze INT )")
-      cur.executemany("INSERT INTO users VALUES(?, ?, ?, ?, ?)", testtabel)
+      cur.executemany("INSERT INTO users VALUES(? ?, ?, ?, ?)", testtabel)
       db.commit()
 
 def read_users_and_write_passwords():
@@ -463,3 +466,4 @@ if __name__=='__main__':
     print "\nprocess_workshop_keuzes() geeft output"
     print "set_plaatsen() GEVAARLIJK kan gebruikt worden om aantal plaatsen per workshop te fixen"
     print "save_db_to_csv() maakt een reservekopie van de DB"
+
