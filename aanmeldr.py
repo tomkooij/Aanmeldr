@@ -181,7 +181,7 @@ def query_db(query, args=(), one=False):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   # volgende regel sluit de site
-  #return render_template('offline.html')
+  return render_template('offline.html')
 
   error = None
   if request.method == 'POST':
