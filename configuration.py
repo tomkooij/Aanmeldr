@@ -3,11 +3,12 @@
 #
 #
 # local testing
-DATABASE = 'flaskr.db'
-DEBUG = True # SSLify requires DEBUG = False
-SECRET_KEY = 'This should be changed in a production enviroment'
+#DATABASE = 'flaskr.db'
+#DEBUG = True # SSLify requires DEBUG = False
+#SECRET_KEY = 'This should be changed in a production enviroment'
 #
 # pythonanywhere
-#DATABASE = '/home/tomkooij/mysite/Aanmeldr/flaskr.db'
-#DEBUG = False
-#SECRET_KEY = 'deze staat dus niet op github...'
+DATABASE = '/home/tomkooij/mysite/Aanmeldr/flaskr.db'
+DEBUG = True
+SECRET_KEY = '312123fgwf2763t5gkqfhbw83q9rf h232j'
+MYSQLPASS = 'zorro567' # dummy password for github

@@ -7,12 +7,14 @@
     (Based on Flaskr, a Flask example. See README for license)
 
 """
+import MySQLdb
+import MySQLdb.cursors
+#from sqlite3 import dbapi2 as sqlite3
 
 import logging
 from logging.handlers import RotatingFileHandler
 from time import time
 
-from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, _app_ctx_stack
 
@@ -39,8 +41,8 @@ def get_db():
     """
     top = _app_ctx_stack.top
     if not hasattr(top, 'sqlite_db'):
-        sqlite_db = sqlite3.connect(app.config['DATABASE'])
-        sqlite_db.row_factory = sqlite3.Row
+        sqlite_db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+        #sqlite_db.row_factory = sqlite_db
         top.sqlite_db = sqlite_db
 
     return top.sqlite_db
@@ -58,7 +60,7 @@ def utility_processor():
     # klas (uit user tabel dan wel sessie cookie)= 1, 2, 3...
     #
     def workshop_voor_deze_klas(klas, filter):
-        if (2**klas & filter):
+        if (2**klas & int(filter)):
             return 1
         else:
             return 0
@@ -74,13 +76,16 @@ def close_db_connection(exception):
 
 @app.route('/', methods=['GET'])
 def show_entries():
+
+
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
     if request.method == 'GET':
 
       db = get_db()
-      cur = db.execute('select * from workshops')
+      cur = db.cursor()
+      cur.execute('select id,titel,plaatsen,filter from workshops')
       workshops = cur.fetchall()
       if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -89,11 +94,13 @@ def show_entries():
 
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
+    # volgende regel sluit de site
+    #return render_template('offline.html')
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-
-    cur = db.execute('select * from workshops')
+    cur = db.cursor()
+    cur.execute('select * from workshops')
     workshops = cur.fetchall()
 
 
@@ -129,12 +136,13 @@ def kies_workshop():
 
         # schrijf eerst de workshop database
         # uitschrijven huidige keuze (staat in cookie)
-        cur = db.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = ? ", [session['keuze']])
+        cur = db.cursor()
+        cur.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = %s ", [session['keuze']])
         # inschrijven nieuwe keuze
         # Dit is heel eng want plaatsen kan kleiner worden dan 0 helaas heeft sqllite geen GREATEST en MAX werkt niet
         # GETEST : werkt nog wel met "plaatsen = -10"
         # misschien moet plaatsen een unsigned int worden en dan afvangen van de error?
-        cur = db.execute("UPDATE workshops set plaatsen = plaatsen - 1 where id = ?", [keuze])
+        cur.execute("UPDATE workshops set plaatsen = plaatsen - 1 where id = %s", [keuze])
         db.commit()
         #
         # VANG HIER ERRORS AF!!!!!!!!!!!!!!!!!!!!!!
@@ -143,7 +151,7 @@ def kies_workshop():
         # Schrijf nu de keuze in de user database
         #
         #      flash('DEBUG: Attempting to write the user database')
-        db.execute("UPDATE users set keuze = ? where id = ? ",
+        cur.execute("UPDATE users set keuze = %s where id = %s ",
                    [keuze, session['username']])
         db.commit()
         #
@@ -163,7 +171,8 @@ def kies_workshop():
         return redirect(url_for('show_entries'))
 
 def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
+    cur = get_db().cursor()
+    cur.execute(query, args)
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
@@ -171,6 +180,9 @@ def query_db(query, args=(), one=False):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+  # volgende regel sluit de site
+  return render_template('offline.html')
+
   error = None
   if request.method == 'POST':
 
@@ -184,16 +196,25 @@ def login():
     else:
       leerlingnummer = int(login_username)
 
-      # Haal userrecord uit databae
+      # Haal userrecord uit database
 
-      user = query_db('select * from users where id = ?',
-                    [leerlingnummer], one=True)
+ #     user = query_db('select naam,wachtwoord,salt,keuze,klas from users where id = %s',
+ #                   [leerlingnummer], one=True)
+
+      db = get_db()
+      cur = db.cursor()
+
+      cur.execute("select naam,wachtwoord,salt,keuze,klas from users where id = %s",[leerlingnummer])
+      db.commit()
+
+      user = cur.fetchone()
+
 
       if user is None:
         error = ('Leerlingnummer %s onbekend' % leerlingnummer)
       else:
-        db_salt = user['salt']
-        db_hash = user['wachtwoord']
+        db_salt = user[2]
+        db_hash = user[1]
         m = hashlib.sha1()
         m.update(db_salt+login_password)
         mijn_hash = m.hexdigest()
@@ -204,10 +225,10 @@ def login():
           # store in session cookie (crypto)
           session['logged_in'] = True
           session['username'] = leerlingnummer
-          session['naam'] = user['naam']
-          session['keuze'] = user['keuze']
-          session['klas'] = user['klas']
-          flash('Welkom %s. Je bent ingelogd.' % user['naam'],'flash')
+          session['naam'] = user[0]
+          session['keuze'] = user[3]
+          session['klas'] = user[4]
+          flash('Welkom %s. Je bent ingelogd.' % user[0],'flash')
           if session['keuze'] > 0:
             flash('Je hebt al een workshop gekozen!','error')
 
