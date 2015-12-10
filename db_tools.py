@@ -321,14 +321,14 @@ def process_workshop_keuzes():
         cur.execute("SELECT id,naam, klas, keuze FROM users")
 
         rows = cur.fetchall()
-
+        print "Dit is een CSV file! Kopieer naar Atom. Save. Importeer daarna in Excel"
         for workshop in workshops:
-            print "workshop: ", workshop[1]
+            print "\"workshop: ", workshop[1],"\""
             lijst_deze_workshop = [workshop[0], workshop[1], workshop[2]]
             tellertje = 1
             for row in rows:
                 if (row["keuze"] == workshop[0]):  # user heeft deze workshop gekozen
-                    print " %d ingeschreven: %s (%d) %d " % (tellertje, row["naam"], row["id"], row["klas"])
+                    print " %d , ingeschreven:, \"%s\" , %d, %d " % (tellertje, row["naam"].replace(',',' '), row["id"], row["klas"])
                     tellertje += 1 # oh nee wat een hack
                     lijst_deze_workshop.append(row["id"])
             lijst_deze_workshop.append(tellertje) # laatste item is aantal ingeschreven... brrrr hack
@@ -340,9 +340,11 @@ def process_workshop_keuzes():
     #
 
     print_workshop_keuzes(ingeschreven)
+    #write_ingeschreven(ingeschreven)
 
 # schrijf naar csv
-def write_ingeschreven():
+def write_ingeschreven(ingeschreven):
+    print "writing: ingeschreven.csv"
     with open('ingeschreven.csv', 'wb') as f:
         mailmerge = csv.writer(f,  dialect='excel')
         for row in ingeschreven:

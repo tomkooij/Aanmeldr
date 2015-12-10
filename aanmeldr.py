@@ -253,4 +253,5 @@ if __name__ == '__main__':
     handler = RotatingFileHandler('aanmeldr.log', maxBytes=10000, backupCount=100)
     handler.setLevel(logging.DEBUG)
     app.logger.addHandler(handler)
+    app.debug = False
     app.run()
