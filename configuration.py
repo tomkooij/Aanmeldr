@@ -10,5 +10,5 @@
 # pythonanywhere
 DATABASE = '/home/tomkooij/mysite/Aanmeldr/flaskr.db'
 DEBUG = True
-SECRET_KEY = '312123fgwf2763t5gkqfhbw83q9rf h232j'
-MYSQLPASS = 'zorro567' # dummy password for github
+SECRET_KEY = 'fjdfkatj4uiqwtewojgsdanvasoiuteqtuj32kjgwhgatjewvcszjsdg;awet02t89'
+MYSQLPASS = '>+l0kOY2>8rP' # dummy password for github
