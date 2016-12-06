@@ -22,12 +22,12 @@ import random
 
 # configuration (DATABASE location)
 #from configuration import DATABASE
-from configuration import MYSQLPASS
+from configuration import *
 
 PASSWORD = MYSQLPASS
 
 def print_db():
-    db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     with db:
 #         db.row_factory = sqlite3.Row   # this enables the dictionary cursor
@@ -46,7 +46,7 @@ def print_db():
 
 def print_workshops():
   #db = sqlite3.connect(DATABASE)
-  db = MySQLdb.connect(host='mysql.server', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS, cursorclass=MySQLdb.cursors.DictCursor)
+  db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
   with db:
 #      db.row_factory = MySQLdb.Row   # this enables the dictionary cursor
@@ -113,11 +113,10 @@ def write_workshops():
 
 
     # deze functie OVERSCHRIJFT DE DATABASE INCLUSIEF KEUZES!
-    #print "Let's don't and say we did!"
-    #return 1
+    print "Let's don't and say we did!"
+    return 1
 
-    #db = sqlite3.connect(DATABASE)
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     with db:
 
@@ -159,6 +158,16 @@ def write_testdb():
       cur.executemany("INSERT INTO users VALUES(? ?, ?, ?, ?)", testtabel)
       db.commit()
 
+
+def fix_lastname(s):
+    """Kooij, van den --> van den Kooij"""
+    parts = s.split(', ')
+    if len(parts) == 2:
+        return parts[1] + ' ' + parts[0]
+    else:
+        return s
+
+
 def read_users_and_write_passwords():
 
     with open('users.csv', 'r') as csvfile:
@@ -174,9 +183,9 @@ def read_users_and_write_passwords():
                     #print row
                     leerlingnummer = int(row[0])
                     klas = int(row[5][0])
-                    email = row[4]
+                    email = row[6]
 
-                    password = generate_password(10)
+                    password = generate_password(6)
                     salt = generate_password(64)
 
                     # create the salted hash form password
@@ -184,7 +193,7 @@ def read_users_and_write_passwords():
                     m.update(salt+password)
                     hashedpassword = m.hexdigest()  # the salted hash
 
-                    naam = unicode((row[2]+' '+row[3]).decode('utf-8','ignore')) # strip illegal chars
+                    naam = unicode((row[2]+' '+fix_lastname(row[3])).decode('utf-8','ignore')) # strip illegal chars
                     voornaam = naam.split(' ')[0]
 
                     print [leerlingnummer, voornaam, klas, email]
@@ -198,8 +207,8 @@ def create_userdb():
     """
 
     # Overschrijf de database!!!!!
-    print "Let's don't and say we did!"
-    return 1
+    #print "Let's don't and say we did!"
+    #return 1
 
     usertable = []
 
@@ -211,7 +220,7 @@ def create_userdb():
             print row
             usertable.append(row)
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     with db:
 
@@ -314,7 +323,7 @@ def process_workshop_keuzes():
     #
     ingeschreven = [] # de grote inshrijf lijst
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS, cursorclass=MySQLdb.cursors.DictCursor)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     with db:
         cur = db.cursor()
@@ -355,7 +364,7 @@ def write_ingeschreven(ingeschreven):
 
 def save_db_to_csv():
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     with db:
         cur = db.cursor()
@@ -371,7 +380,7 @@ def save_db_to_csv():
 
 def print_workshop_keuzes(ingeschreven):
 
-    db = MySQLdb.connect(host='tomkooij.mysql.pythonanywhere-services.com', user='tomkooij', db='tomkooij$aanmeldr', passwd=MYSQLPASS)
+    db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
 
     plaatsen = {}
 

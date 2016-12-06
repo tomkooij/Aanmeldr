@@ -8,7 +8,12 @@
 #SECRET_KEY = 'This should be changed in a production enviroment'
 #
 # pythonanywhere
-DATABASE = '/home/tomkooij/mysite/Aanmeldr/flaskr.db'
 DEBUG = True
-SECRET_KEY = 'fjdfkatj4uiqwtewojgsdanvasoiuteqtuj32kjgwhgatjewvcszjsdg;awet02t89'
-MYSQLPASS = '>+l0kOY2>8rP' # dummy password for github
+
+MYSQLSERVER = 'tomkooij.mysql.pythonanywhere-services.com'
+MYSQLDB = 'tomkooij$aanmeldr'
+MYSQLUSER = 'tomkooij'
+
+# secrets
+SECRET_KEY = 'github'
+MYSQLPASS = 'github'
