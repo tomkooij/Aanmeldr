@@ -11,7 +11,11 @@ Tom Kooij, oktober 2014
 
 Note @self:
 Hoe werkt dit?
-- site is tomkooij.pythonanywhere.com. Zet offline: zie https://github.com/tomkooij/Aanmeldr@0fd285f
+
+site is tomkooij.pythonanywhere.com. 
+
+workflow:
+- Zet site offline: zie commit tomkooij/Aanmeldr@0fd285f
 - vervang secrets in `configuration.py`. Verander het MySQL ww in de webinterface.
 - Exporteer leerlingen (klas 2 t/m 6) uit SOMtoday.
 - Vervang kolom emailadressen door: =TEKST.SAMENVOEGEN("cg"; A2; "@coornhert-gymnasium.nl")
@@ -21,8 +25,13 @@ Hoe werkt dit?
 - nu worden de ww gegeneerd en `passwd.csv` en `mailmerge.csv` gescherven.
 - test het inloggen op tomkooij.pythonanywhere.com
 - vul de workshops in in `db_tools.py`.
-- gebruik `write_workshops()`
+- gebruik `write_workshops()` (verwijder '`return 1` in de buurt van "let's don't and say we did")
 - TEST, TEST, TEST
 - Laat cgfix de mailmerge rondsturen.
+- **DOEN: Deactiveer:** `write_workshops()` en `create_userdb()` dmv "let's don't and say we did"
 - Ga live: tomkooij/Aanmeldr@0fd285f
 - gebruik `db_tools.py` om te monitoren.
+
+Achteraf:
+- commit en push! 
+
