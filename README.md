@@ -12,6 +12,9 @@ Tom Kooij, oktober 2014
 Note @self:
 Hoe werkt dit?
 
+**Dit is inelkaar gehackt tijdens de zwemlessen van Femke in oktober 2014**
+**DO NOT USE THIS CODE**
+
 site is tomkooij.pythonanywhere.com. 
 
 workflow:
@@ -30,8 +33,10 @@ workflow:
 - Laat cgfix de mailmerge rondsturen.
 - **DOEN: Deactiveer:** `write_workshops()` en `create_userdb()` dmv "let's don't and say we did"
 - `ipython; run db_tools.py; write_workshops(); write_userdb();` Werkte dit??? Ga terug naar AF!
+- TEST, TEST, TEST
+- Zet `AANTAL_LLN` in `db_tools.py` en `process_workshop_keuzes()`
 - Ga live: tomkooij/Aanmeldr@0fd285f
-- gebruik `db_tools.py` om te monitoren.
+- gebruik `db_tools.py` om te monitoren: `process_workshop_keuzes()`
 
 Achteraf:
 - commit en push! 
