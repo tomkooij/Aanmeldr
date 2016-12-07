@@ -72,41 +72,45 @@ alles = onderbouw+bovenbouw
 
 
 
-workshops = ( (0,"Geen keuze",100000, alles  ),
+workshops = [ ("Geen keuze ", 100000, alles),
 # klas 2
-    (1, "Sport in de Mammoet ", 40 , klas2),
-    (2, "Circus in Mammoet ", 10, klas2),
-    (3, "Workshop Powertape", 74, klas2),
-    (4, "Workshop Theater ", 20, klas2),
-    (5, "Workshop Musical ", 20, klas2),
-    (6, "Workshop Striptekenen ", 18, klas2),
-    (7, "Vogels kijken ", 3, klas2),
-    (8, "Schaken ", 4, klas2),
+    ("Sport in de Mammoet ", 40 , klas2),
+    ("Circus in Mammoet ", 10, klas2),
+    ("Workshop bamboestieken ", 16, klas2),
+    ("Workshop Theater ", 20, klas2),
+    ("Workshop Musical ", 20, klas2),
+    ("Workshop Striptekenen ", 16, klas2),
+    ("Vogels kijken ", 5, klas2),
+    ("Schaken ", 5, klas2),
+    ("Yoga/mediteren ", 2, klas2),
 #klas 3
-    (9, "Sport in Mammoet ", 40, klas3),
-    (10, "Circus in Mammoet", 10, klas3),
-    (11, "Workshop Ritme Bas", 10, klas3),
-    (12, "Workshop Gitaar", 15, klas3),
-    (13, "Workshop Sing/songwriter ", 10, klas3),
-    (14, "Workshop Popzang ", 20, klas3),
-    (15, "Vogels kijken ", 6, klas3),
-    (16, "Workshop Weihnachtsoratorium (Om)", 10, klas3),
-    (17, "Schaken", 4, klas3),
+    ("Sport in Mammoet ", 40, klas3),
+    ("Circus in Mammoet ", 10, klas3),
+    ("Workshop Fotografie ", 4, klas3),
+    ("Workshop Gitaar ", 15, klas3),
+    ("Workshop Popzang ", 20, klas3),
+    ("Streetdance ", 10, klas3),
+    ("Vogels kijken ", 5, klas3),
+    ("Workshop Messiah (Om) ", 5, klas3),
+    ("Schaken", 4, klas3),
+    ("Yoga/mediteren ", 8, klas3),
 #klas 4
-    (18, "Step by Step ", 40, klas4),
-    (19, "Waterpolo ", 20, klas4),
-    (20, "Bootcamp met Robin en Noor ", 20, klas4),
-    (21, "Streetdance (garenspinnerij)", 20, klas4),
-    (22, "Vogels kijken", 6, klas4),
-    (23, "Workshop Weihnachtsoratorium (Om)", 10, klas4),
-    (24, "Schaken", 4, klas4),
+    ("Step by Step ", 40, klas4),
+    ("Waterpolo ", 20, klas4),
+    ("Bootcamp met Noor ", 20, klas4),
+    ("Streetdance (garenspinnerij)", 10, klas4),
+    ("Fotografie", 8, klas4),
+    ("Workshop Messiah (Om) ", 10, klas4),
+    ("Vogels kijken", 5, klas4),
+    ("Schaken", 4, klas4),
+    ("Yoga/mediteren ", 3, klas4),
 #klas 5+6
-    (25, "Film Premiere: Publieke werken. Cinema Gouda", 200, klas5+klas6),
-#klas6
-    (26, "Workshop kunstpunt: 3D tekenen", 12, klas5+klas6),
-    (27, "Workshop kunstpunt: animatie", 15, klas5+klas6),
-    (28, "Vogels kijken", 3, klas5+klas6),
-    )
+    ("Film Premiere: I, Daniel Blake. Cinema Gouda", 195, klas5+klas6),
+    ("Workshop kunstpunt: 3D tekenen", 12, klas5+klas6),
+    ("Workshop kunstpunt: Animatiefilmpje", 15, klas5+klas6),
+    ("Vogels kijken", 3, klas5+klas6),
+    ("Yoga/mediteren ", 5, klas5+klas6),
+    ]
 
 
 def write_workshops():
@@ -126,11 +130,22 @@ def write_workshops():
         #      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
         #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
 
+        # nummer de workshops. Dit kan SQL natuurlijk ook...
+        aantal_plaatsen = 0
+        for idx, workshop in enumerate(workshops):
+            titel, plaatsen, filter_ = workshop
+            wkshop = (idx, titel, plaatsen, filter_)
+            print wkshop
+            enumerated_workshops.append(wkshop)
+            aantal_plaatsen += plaatsen
+
         cur.execute("DROP TABLE IF EXISTS workshops")
         cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT, filter INT )")
         db.commit()
         cur.executemany("INSERT INTO workshops VALUES(%s, %s, %s, %s)", workshops)
         db.commit()
+
+        print "controleer: %d plaatsen" % aantal_plaatsen
 
 
 def write_testdb():
@@ -477,4 +492,3 @@ if __name__=='__main__':
     print "\nprocess_workshop_keuzes() geeft output"
     print "set_plaatsen() GEVAARLIJK kan gebruikt worden om aantal plaatsen per workshop te fixen"
     print "save_db_to_csv() maakt een reservekopie van de DB"
-
