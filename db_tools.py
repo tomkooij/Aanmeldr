@@ -25,6 +25,7 @@ import random
 from configuration import *
 
 PASSWORD = MYSQLPASS
+AANTAL_LLN = 602
 
 def print_db():
     db = MySQLdb.connect(host=MYSQLSERVER, user=MYSQLUSER, db=MYSQLDB, passwd=MYSQLPASS)
@@ -439,7 +440,7 @@ def print_workshop_keuzes(ingeschreven):
                 print "LET OP!!!! DATABASE ERROR"
                 print "plaatsen moet %d zijn" % (totaal_plaatsen - aantal_ingeschreven)
 
-    print "\n%d leerlingen ingeschreven" % (751-(len(ingeschreven[0])-3))
+    print "\n%d leerlingen ingeschreven" % (AANTAL_LLN-(len(ingeschreven[0])-3))
     print "Nog %d te gaan" % (len(ingeschreven[0])-3)
     print "Er zijn nog %d plaatsen beschikbaar" % nog_vrij
 
