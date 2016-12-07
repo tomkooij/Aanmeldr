@@ -29,6 +29,7 @@ workflow:
 - TEST, TEST, TEST
 - Laat cgfix de mailmerge rondsturen.
 - **DOEN: Deactiveer:** `write_workshops()` en `create_userdb()` dmv "let's don't and say we did"
+- `ipython; run db_tools.py; write_workshops(); write_userdb();` Werkte dit??? Ga terug naar AF!
 - Ga live: tomkooij/Aanmeldr@0fd285f
 - gebruik `db_tools.py` om te monitoren.
 
