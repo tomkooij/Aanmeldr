@@ -11,11 +11,12 @@ Tom Kooij, oktober 2014
 
 Note @self:
 Hoe werkt dit?
-- site is tomkooij.pythonanywhere.com. Zet offline: Ga live: tomkooij/Aanmeldr@0fd285f
+- site is tomkooij.pythonanywhere.com. Zet offline: zie https://github.com/tomkooij/Aanmeldr@0fd285f
 - vervang secrets in `configuration.py`. Verander het MySQL ww in de webinterface.
 - Exporteer leerlingen (klas 2 t/m 6) uit SOMtoday.
 - Vervang kolom emailadressen door: =TEKST.SAMENVOEGEN("cg"; A2; "@coornhert-gymnasium.nl")
-- sla op als `users.csv` en upload
+- sla op als `users.csv` en upload naar mysite/Aanmeldr
+- `cd mysite/Aanmeldr`
 - `ipython; run db_tools.py; read_users_and_write_passwords();`
 - nu worden de ww gegeneerd en `passwd.csv` en `mailmerge.csv` gescherven.
 - test het inloggen op tomkooij.pythonanywhere.com
