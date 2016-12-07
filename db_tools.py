@@ -352,10 +352,10 @@ def process_workshop_keuzes():
             lijst_deze_workshop = [workshop[0], workshop[1], workshop[2]]
             tellertje = 1
             for row in rows:
-                if (row["keuze"] == workshop[0]):  # user heeft deze workshop gekozen
-                    print " %d , ingeschreven:, \"%s\" , %d, %d " % (tellertje, row["naam"].replace(',',' '), row["id"], row["klas"])
+                if (row[3] == workshop[0]):  # user heeft deze workshop gekozen
+                    print " %d , ingeschreven:, \"%s\" , %d, %d " % (tellertje, row[1].replace(',',' '), row[0], row[2])
                     tellertje += 1 # oh nee wat een hack
-                    lijst_deze_workshop.append(row["id"])
+                    lijst_deze_workshop.append(row[0])
             lijst_deze_workshop.append(tellertje) # laatste item is aantal ingeschreven... brrrr hack
             ingeschreven.append(lijst_deze_workshop)
 
