@@ -72,7 +72,7 @@ alles = onderbouw+bovenbouw
 
 
 
-workshops = [ ("Geen keuze ", 100000, alles),
+workshops_invoer = [ ("Geen keuze ", 100000, alles),
 # klas 2
     ("Sport in de Mammoet ", 40 , klas2),
     ("Circus in Mammoet ", 10, klas2),
@@ -112,6 +112,12 @@ workshops = [ ("Geen keuze ", 100000, alles),
     ("Yoga/mediteren ", 5, klas5+klas6),
     ]
 
+workshops = []
+for idx, workshop in enumerate(workshops_invoer):
+    titel, plaatsen, filter_ = workshop
+    wkshop = (idx, titel, plaatsen, filter_)
+    workshops.append(wkshop)
+
 
 def write_workshops():
 
@@ -130,14 +136,6 @@ def write_workshops():
         #      cur.execute("INSERT INTO users VALUES (007,'James Bond','wachtwoord',7);")
         #      cur.execute("INSERT INTO users VALUES (1,'Test Leerling','geheim',1);")
 
-        # nummer de workshops. Dit kan SQL natuurlijk ook...
-        aantal_plaatsen = 0
-        for idx, workshop in enumerate(workshops):
-            titel, plaatsen, filter_ = workshop
-            wkshop = (idx, titel, plaatsen, filter_)
-            print wkshop
-            enumerated_workshops.append(wkshop)
-            aantal_plaatsen += plaatsen
 
         cur.execute("DROP TABLE IF EXISTS workshops")
         cur.execute("CREATE TABLE workshops(id INT, titel TEXT, plaatsen INT, filter INT )")
@@ -145,6 +143,9 @@ def write_workshops():
         cur.executemany("INSERT INTO workshops VALUES(%s, %s, %s, %s)", workshops)
         db.commit()
 
+        aantal_plaatsen = 0
+        for workshop in workshops:
+            aantal_plaatsen += workshop[2]
         print "controleer: %d plaatsen" % aantal_plaatsen
 
 
@@ -490,5 +491,6 @@ if __name__=='__main__':
     print "write_workshops() writes the workshops to the database"
     print "\nprint_db() to dump the database"
     print "\nprocess_workshop_keuzes() geeft output"
+    print "print workshops geeft workshops zoals ingevoerd"
     print "set_plaatsen() GEVAARLIJK kan gebruikt worden om aantal plaatsen per workshop te fixen"
     print "save_db_to_csv() maakt een reservekopie van de DB"
