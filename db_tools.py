@@ -99,10 +99,10 @@ def print_workshops():
     db = get_db()
 
     with db:
-    cur = db.cursor()
-    cur.execute("SELECT * FROM workshops")
+        cur = db.cursor()
+        cur.execute("SELECT * FROM workshops")
 
-    rows = cur.fetchall()
+        rows = cur.fetchall()
 
     for row in rows:
         print row
@@ -381,5 +381,5 @@ if __name__=='__main__':
     print "process_workshop_keuzes() geeft output"
     print "print workshops geeft workshops zoals ingevoerd"
     print "set_plaatsen() GEVAARLIJK kan gebruikt worden om "
-          "aantal plaatsen per workshop te fixen"
+    print "aantal plaatsen per workshop te fixen"
     print "save_db_to_csv() maakt een reservekopie van de DB"
