@@ -18,6 +18,11 @@ Hoe werkt dit?
 
 site is tomkooij.pythonanywhere.com. 
 
+TODO voor 2017:
+- [ ] output voor roostermaker: Kolom met lastname ("Kooij", niet "van der Kooij") voor sorteren
+- [ ] output voor roostermaker (na inschrijven) "Naam", "llnnummer", "klas", "Workshopnaam", "Achternaam (sorteren)"
+  
+
 workflow:
 - Zet site offline: zie commit tomkooij/Aanmeldr@0fd285f
 - vervang secrets in `configuration.py`. Verander het MySQL ww in de webinterface.
