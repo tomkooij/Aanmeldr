@@ -94,8 +94,9 @@ def show_entries():
 
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
-    # volgende regel sluit de site
-    #return render_template('offline.html')
+    # volgende regel sluit de site ZIE OOK BIJ login()
+    return render_template('offline.html')
+
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
@@ -138,6 +139,8 @@ def kies_workshop():
         # uitschrijven huidige keuze (staat in cookie)
         cur = db.cursor()
         cur.execute("UPDATE workshops set plaatsen = plaatsen + 1 where id = %s ", [session['keuze']])
+        db.commit()
+
         # inschrijven nieuwe keuze
         # Dit is heel eng want plaatsen kan kleiner worden dan 0 helaas heeft sqllite geen GREATEST en MAX werkt niet
         # GETEST : werkt nog wel met "plaatsen = -10"
@@ -181,7 +184,7 @@ def query_db(query, args=(), one=False):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   # volgende regel sluit de site
-  #return render_template('offline.html')
+  return render_template('offline.html')
 
   error = None
   if request.method == 'POST':
