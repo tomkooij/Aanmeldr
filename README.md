@@ -32,6 +32,7 @@ workflow:
 - `cd mysite/Aanmeldr`
 - `ipython; run db_tools.py; read_users_and_write_passwords();`
 - nu worden de ww gegeneerd en `passwd.csv` en `mailmerge.csv` gescherven.
+- `create_userdb()` schrijft `output.csv` naar de database. 
 - test het inloggen op tomkooij.pythonanywhere.com
 - vul de workshops in in `db_tools.py`.
 - gebruik `write_workshops()` (verwijder '`return 1` in de buurt van "let's don't and say we did")
