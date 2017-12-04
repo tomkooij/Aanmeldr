@@ -23,10 +23,25 @@ from flask_sslify import SSLify
 
 import hashlib, os, binascii # crypto voor wachtwoorden
 
+import calendar, datetime
+
 # import configuration
 from configuration import *
 
+def get_unix_timestamp():
+    return datetime_to_timestamp(datetime.datetime.now())
 
+def datetime_to_timestamp(dt):
+    return calendar.timegm(dt.timetuple())
+
+def datestr_to_datetime(s):
+    """28 Aug 1999 12:00AM """
+    return datetime.datetime.strptime(s, '%d %b %Y %H:%M')
+
+def timeleft(datestr):
+    dt = datestr_to_datetime(datestr)
+    x = dt - datetime.datetime.now()
+    return int(x.total_seconds() - 3600)  # hack voor timezone verschil
 
 
 # create our little application :)
@@ -95,7 +110,9 @@ def show_entries():
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
     # volgende regel sluit de site ZIE OOK BIJ login()
-    return render_template('offline.html')
+    #return render_template('offline.html')
+    if timeleft(SITE_OPEN) > 0:
+        return render_template('wait.html', ts=timeleft(SITE_OPEN), site_open=SITE_OPEN)
 
     if not session.get('logged_in'):
         abort(401)
@@ -184,7 +201,9 @@ def query_db(query, args=(), one=False):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   # volgende regel sluit de site
-  return render_template('offline.html')
+  #return render_template('offline.html')
+  if timeleft(SITE_OPEN) > 0:
+    return render_template('wait.html', ts=timeleft(SITE_OPEN), site_open=SITE_OPEN)
 
   error = None
   if request.method == 'POST':
