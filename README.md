@@ -26,6 +26,8 @@ TODO voor 2017:
 workflow:
 - Zet site offline: zie commit tomkooij/Aanmeldr@0fd285f
 - vervang secrets in `configuration.py`. Verander het MySQL ww in de webinterface.
+- zet het activatie datum/tijdstip in `configuration.py`
+- zorg dat de starttijd na 16u05 is! Meestal zijn er toetsen tot 16u05.
 - Exporteer leerlingen (klas 2 t/m 6) uit SOMtoday.
 - Vervang kolom emailadressen door: =TEKST.SAMENVOEGEN("cg"; A2; "@coornhert-gymnasium.nl")
 - sla op als `users.csv` en upload naar mysite/Aanmeldr
