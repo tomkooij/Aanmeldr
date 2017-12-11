@@ -110,7 +110,7 @@ def show_entries():
 @app.route('/kies_workshop', methods=['POST'])
 def kies_workshop():
     # volgende regel sluit de site ZIE OOK BIJ login()
-    #return render_template('offline.html')
+    return render_template('offline.html')
     if timeleft(SITE_OPEN) > 0:
         return render_template('wait.html', ts=timeleft(SITE_OPEN), site_open=SITE_OPEN)
 
@@ -201,7 +201,7 @@ def query_db(query, args=(), one=False):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   # volgende regel sluit de site
-  #return render_template('offline.html')
+  return render_template('offline.html')
   if timeleft(SITE_OPEN) > 0:
     return render_template('wait.html', ts=timeleft(SITE_OPEN), site_open=SITE_OPEN)
 

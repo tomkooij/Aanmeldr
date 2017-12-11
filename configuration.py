@@ -17,3 +17,7 @@ MYSQLUSER = 'tomkooij'
 # secrets
 SECRET_KEY = 'github'
 MYSQLPASS = 'github'
+
+# site open at:
+# zet de site NA het 8ste uur open! Er zijn vaak toetsen het 8ste!
+SITE_OPEN = '7 Dec 2017 16:15'  # let op hours / min zijn ZERO PADDED!

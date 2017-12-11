@@ -34,40 +34,47 @@ workshops_invoer = [ ("Geen keuze ", 100000, alles),
 # klas 2
     ("Sport in de Mammoet ", 40 , klas2),
     ("Circus in Mammoet ", 10, klas2),
-    ("Workshop bamboestieken ", 16, klas2),
-    ("Workshop Theater ", 20, klas2),
-    ("Workshop Musical ", 20, klas2),
+    ("Workshop Powertape", 14, klas2),
+    ("Workshop Theater ", 18, klas2),
+    ("Workshop Musical ", 18, klas2),
     ("Workshop Striptekenen ", 16, klas2),
-    ("Vogels kijken ", 5, klas2),
+    ("Vogels kijken ", 4, klas2),
     ("Schaken ", 5, klas2),
-    ("Yoga/mediteren ", 2, klas2),
 # klas 3
     ("Sport in Mammoet ", 40, klas3),
     ("Circus in Mammoet ", 10, klas3),
-    ("Workshop Fotografie ", 4, klas3),
-    ("Workshop Gitaar ", 15, klas3),
-    ("Workshop Popzang ", 20, klas3),
-    ("Streetdance ", 10, klas3),
+    ("Freerunning Mammoet Jaap Oostrom", 3, klas3),
+    ("Fotografie (garenspinnerij)", 10, klas3),
+    ("Popzang (garenspinnerij)", 15, klas3),
+    ("Djembe en ritme (garenspinnerij)", 15, klas3),
+    ("Streetdance (garenspinnerij) ", 10, klas3),
     ("Vogels kijken ", 5, klas3),
-    ("Workshop Messiah (Om) ", 5, klas3),
-    ("Schaken", 4, klas3),
-    ("Yoga/mediteren ", 8, klas3),
+    ("Muziek: Workshop Messiah (Om) ", 5, klas3),
+    ("Schaken", 7, klas3),
+    ("Yoga/mediteren ", 7, klas3),
 # klas 4
     ("Step by Step ", 40, klas4),
-    ("Waterpolo ", 20, klas4),
-    ("Bootcamp met Noor ", 20, klas4),
+    ("Freerunning Mammoet Jaap Oostrom", 10, klas4),
+    ("Bootcamp met Noor ", 10, klas4),
     ("Streetdance (garenspinnerij)", 10, klas4),
-    ("Fotografie", 8, klas4),
-    ("Workshop Messiah (Om) ", 10, klas4),
+    ("3D-pen tekenen (garenspinnerij)", 3, klas4),
+    ("Animatiefilm (garenspinnerij)", 3, klas4),
+    ("Fotografie (garenspinnerij)", 5, klas4),
+    ("Muziek: Workshop Messiah (Om) ", 12, klas4),
     ("Vogels kijken", 5, klas4),
-    ("Schaken", 4, klas4),
-    ("Yoga/mediteren ", 3, klas4),
+    ("Schaken", 6, klas4),
+    ("Yoga/mediteren ", 5, klas4),
+    ("D&D", 4, klas4),
 # klas 5+6
-    ("Film Premiere: I, Daniel Blake. Cinema Gouda", 195, klas5+klas6),
-    ("Workshop kunstpunt: 3D tekenen", 12, klas5+klas6),
-    ("Workshop kunstpunt: Animatiefilmpje", 15, klas5+klas6),
+    ("Film Premiere: Wonder Cinema Gouda", 197, klas5+klas6),
+    ("Freerunning Mammoet Jaap Oostrom", 5, klas5+klas6),
+    ("3D-pen tekenen (garenspinnerij)", 7, klas5+klas6),
+    ("Animatiefilm (garenspinnerij)", 7, klas5+klas6),
+    ("Muziek: Workshop Messiah (Om) ", 7, klas5+klas6),
     ("Vogels kijken", 3, klas5+klas6),
-    ("Yoga/mediteren ", 5, klas5+klas6),
+    ("Schaken", 2, klas5+klas6),
+    ("D&D", 5, klas5+klas6),
+    ("Yoga/mediteren ", 3, klas5+klas6)
     ]
 
 workshops = []
@@ -216,6 +223,11 @@ def generate_password(length):
     pw = length * ' '
     return ''.join([random.choice(pw_set) for c in pw])
 
+def sort_name(s):
+    """ Jan van der Belt --> Belt. Jan van der"""
+    parts = s.rsplit(' ', 1)
+    return parts[1]+'. '+parts[0]
+
 
 def process_workshop_keuzes():
 
@@ -238,7 +250,7 @@ def process_workshop_keuzes():
             tellertje = 1
             for row in rows:
                 if (row[3] == workshop[0]):  # user heeft deze workshop gekozen
-                    print " %d , ingeschreven:, \"%s\" , %d, %d " % (tellertje, row[1].replace(',',' '), row[0], row[2])
+                    print " %d , ingeschreven:, %s, %d, %d, %d, %s " % (tellertje, sort_name(row[1].replace(',',' ')), row[0], row[2], workshop[0], workshop[1])
                     tellertje += 1 # oh nee wat een hack
                     lijst_deze_workshop.append(row[0])
             lijst_deze_workshop.append(tellertje) # laatste item is aantal ingeschreven... brrrr hack
