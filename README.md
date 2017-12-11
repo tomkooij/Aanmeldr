@@ -18,15 +18,23 @@ Hoe werkt dit?
 
 site is tomkooij.pythonanywhere.com. 
 
+TODO voor 2017:
+- [ ] output voor roostermaker: Kolom met lastname ("Kooij", niet "van der Kooij") voor sorteren
+- [ ] output voor roostermaker (na inschrijven) "Naam", "llnnummer", "klas", "Workshopnaam", "Achternaam (sorteren)"
+  
+
 workflow:
 - Zet site offline: zie commit tomkooij/Aanmeldr@0fd285f
 - vervang secrets in `configuration.py`. Verander het MySQL ww in de webinterface.
+- zet het activatie datum/tijdstip in `configuration.py`
+- zorg dat de starttijd na 16u05 is! Meestal zijn er toetsen tot 16u05.
 - Exporteer leerlingen (klas 2 t/m 6) uit SOMtoday.
 - Vervang kolom emailadressen door: =TEKST.SAMENVOEGEN("cg"; A2; "@coornhert-gymnasium.nl")
 - sla op als `users.csv` en upload naar mysite/Aanmeldr
 - `cd mysite/Aanmeldr`
 - `ipython; run db_tools.py; read_users_and_write_passwords();`
 - nu worden de ww gegeneerd en `passwd.csv` en `mailmerge.csv` gescherven.
+- `create_userdb()` schrijft `output.csv` naar de database. 
 - test het inloggen op tomkooij.pythonanywhere.com
 - vul de workshops in in `db_tools.py`.
 - gebruik `write_workshops()` (verwijder '`return 1` in de buurt van "let's don't and say we did")
