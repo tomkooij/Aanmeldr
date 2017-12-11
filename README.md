@@ -18,9 +18,6 @@ Hoe werkt dit?
 
 site is tomkooij.pythonanywhere.com. 
 
-TODO voor 2017:
-- [ ] output voor roostermaker: Kolom met lastname ("Kooij", niet "van der Kooij") voor sorteren
-- [ ] output voor roostermaker (na inschrijven) "Naam", "llnnummer", "klas", "Workshopnaam", "Achternaam (sorteren)"
   
 
 workflow:
@@ -48,5 +45,7 @@ workflow:
 - gebruik `db_tools.py` om te monitoren: `process_workshop_keuzes()`
 
 Achteraf:
+- sluit site door zoeken naar 'offline' in `aanmeldr.py`
+- `process_workshop_keuzes()` --> copy paste naar excel
+- verwijder secrets uit `configuration.py`
 - commit en push! 
-
